@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "repositories": [
+    { "path": "Cohesian/core", "github": "cohesian/core", "role": "Cohesian's principles and foundational ideas" },
+    { "path": "Cohesian/site", "github": "cohesian/site", "role": "Cohesian's public website and catalog of its work" },
+    { "path": "Cohesian/essays/bookly-up", "github": "cohesian-essays/bookly-up", "role": "Book about a booking-system architecture" },
+    { "path": "Cohesian/essays/intro-to-golang", "github": "cohesian-essays/intro-to-golang", "role": "Book introducing Go" },
+    { "path": "Cohesian/essays/research", "github": "cohesian/research", "role": "Research repository" },
+    { "path": "Cohesian/tools/devky", "github": "cohesian-tools/devky", "role": "Cohesian tool" },
+    { "path": "Cohesian/tools/josly", "github": "cohesian-tools/josly", "role": "Cohesian tool" },
+    { "path": "Cohesian/tools/k-graph", "github": "cohesian-tools/k-graph", "role": "Cohesian tool" },
+    { "path": "Cohesian/tools/loci", "github": "cohesian-tools/loci", "role": "Cohesian tool" },
+    { "path": "Cohesian/tools/optional", "github": "cohesian-tools/optional", "role": "Cohesian tool" },
+    { "path": "Cohesian/tools/resumy", "github": "cohesian-tools/resumy", "role": "Generates a formatted resume PDF from resume data" },
+    { "path": "Cohesian/tools/tether", "github": "cohesian-tools/tether", "role": "Cohesian tool" },
+    { "path": "Profile/leetcode", "github": "lucas-masiero/leetcode", "role": "Personal algorithm solutions" },
+    { "path": "Profile/pj-homesolution", "github": "lucas-masiero/pj-homesolution", "role": "Personal project" },
+    { "path": "Profile/portfolio", "github": "lucas-masiero/portfolio", "role": "Personal portfolio website" },
+    { "path": "Profile/resume", "github": "lucas-masiero/resume", "role": "Structured resume and personal profile data" }
+  ]
+}

@@ -1,0 +1,4 @@
+# Workspace is an index only. All source projects live in independent Git repos.
+# These entire local trees are intentionally excluded from the index repository.
+/Cohesian/
+/Profile/
