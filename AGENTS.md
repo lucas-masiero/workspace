@@ -27,6 +27,7 @@ This directory is a **routing index for multiple independent Git repositories**,
 - **Cohesian `site`** publishes the organization catalog and exposes a smaller Cohesian presentation/card that **Profile `portfolio`** consumes.
 - **Profile `resume`** owns structured personal and career data; its `resume.json` conforms to a schema used by **`resumy`** to generate a formatted `resume.pdf`.
 - **Profile `portfolio`** presents personal data from `Profile/resume` and the Cohesian presentation from `Cohesian/site`; do not duplicate either source of truth without cause.
+- **Projects** is an independant node from the rest, containing personal projects from different scopes and owners.
 
 Do **not** infer technical specifics—API routes, file paths, schema names, export formats, build tools, or deploy targets—from these conceptual relationships. Inspect the actual projects before implementing integration changes.
 

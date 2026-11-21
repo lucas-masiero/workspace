@@ -21,8 +21,8 @@ Workspace/                               # root index repository (not a project 
 │   ├── setup-termux.sh                  # Termux packages + GitHub authentication
 │   └── bootstrap.sh                     # create directories + clone missing repos
 ├── Cohesian/                            # IGNORED by root Git
-│   ├── core/                             # cohesian/core
-│   ├── site/                             # cohesian/site
+│   ├── core/                            # cohesian/core
+│   ├── site/                            # cohesian/site
 │   ├── essays/
 │   │   ├── bookly-up/                   # cohesian-essays/bookly-up
 │   │   ├── intro-to-golang/             # cohesian-essays/intro-to-golang
@@ -35,11 +35,16 @@ Workspace/                               # root index repository (not a project 
 │       ├── optional/                    # cohesian-tools/optional
 │       ├── resumy/                      # cohesian-tools/resumy
 │       └── tether/                      # cohesian-tools/tether
-└── Profile/                             # IGNORED by root Git
-    ├── leetcode/                        # lucas-masiero/leetcode
-    ├── pj-homesolution/                 # lucas-masiero/pj-homesolution
-    ├── portfolio/                       # lucas-masiero/portfolio
-    └── resume/                          # lucas-masiero/resume
+├── Profile/                             # IGNORED by root Git
+│   ├── leetcode/                        # lucas-masiero/leetcode
+│   ├── pj-homesolution/                 # lucas-masiero/pj-homesolution
+│   ├── portfolio/                       # lucas-masiero/portfolio
+│   └── resume/                          # lucas-masiero/resume
+└── Projects/                            # IGNORED by root Git
+    └── bookly-up/
+        ├── auth/                        # bookly-up/auth
+        ├── booking/                     # bookly-up/booking
+        └── payment/                     # bookly-up/payment
 ```
 
 **Total: 16 project repositories** — 12 under `Cohesian/`, 4 under `Profile/`. The index is a separate outer Git repository, if initialized or cloned.
@@ -78,7 +83,16 @@ This describes an **information contract**, not a specific framework or transpor
 
 The exact schema, command line, and file locations beyond `resume.json` are defined by the respective repositories; this index does not prescribe them.
 
-## 5. Conceptual information flow
+## 5. Projects: personal projects
+
+`Projects` is a space that contains different projects including from different owners. Its work is divided into:
+
+- **`bookly-up`** is a project for booking it contains different repository modules:
+- **auth** an authentication module
+- **booking** a booking system module such as reservations
+- **payment** a payment module
+
+## 6. Conceptual information flow
 
 ```mermaid
 flowchart LR
@@ -101,7 +115,7 @@ flowchart LR
 
 `core` is shown as a foundation of the organization; no specific runtime dependency between `core` and the site is assumed.
 
-## 6. Operational model
+## 7. Operational model
 
 1. Clone or unpack the **index repository** into `Workspace/`. Its two project directories may not yet exist.
 2. On Termux, run `scripts/setup-termux.sh` to install the packages and configure GitHub SSH / CLI authentication; **no repositories are cloned by this script**.

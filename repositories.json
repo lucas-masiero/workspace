@@ -16,6 +16,9 @@
     { "path": "Profile/leetcode", "github": "lucas-masiero/leetcode", "role": "Personal algorithm solutions" },
     { "path": "Profile/pj-homesolution", "github": "lucas-masiero/pj-homesolution", "role": "Personal project" },
     { "path": "Profile/portfolio", "github": "lucas-masiero/portfolio", "role": "Personal portfolio website" },
-    { "path": "Profile/resume", "github": "lucas-masiero/resume", "role": "Structured resume and personal profile data" }
+    { "path": "Profile/resume", "github": "lucas-masiero/resume", "role": "Structured resume and personal profile data" },
+    { "path": "Projects/bookly-up/auth", "github": "bookly-up/auth", "role": "Bookly auth module for booking system"},
+    { "path": "Projects/bookly-up/booking", "github": "bookly-up/booking", "role": "Bookly booking module for booking system"},
+    { "path": "Projects/bookly-up/payment", "github": "bookly-up/payment", "role": "Bookly payment module for booking system"}
   ]
 }

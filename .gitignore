@@ -2,3 +2,7 @@
 # These entire local trees are intentionally excluded from the index repository.
 /Cohesian/
 /Profile/
+/Projects/
+
+.DS_Store
+/.worktrees/

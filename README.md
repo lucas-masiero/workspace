@@ -5,7 +5,8 @@ This repository is the **index and root of a local tree of independent Git repos
 The two top-level project families are:
 
 - **`Cohesian/`** — the Cohesian organization: its principles (`core`), public site (`site`), books/research (`essays`), and software (`tools`).
-- **`Profile/`** — personal resume data, portfolio, and projects.
+- **`Profile/`** — personal resume data and portfolio
+- **`Projects/`** — personal projects
 
 The `Cohesian/` and `Profile/` directories are deliberately ignored by this repository's `.gitignore`. They are populated locally by cloning independent repositories. They are **not** Git submodules, and the index does not track their content.
 
