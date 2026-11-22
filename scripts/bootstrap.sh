@@ -52,7 +52,7 @@ for entry in repos:
     if not isinstance(path, str) or not isinstance(github, str):
         raise SystemExit("ERROR: path and github must be strings")
     parts = path.split("/")
-    if (len(parts) < 2 or parts[0] not in {"Cohesian", "Profile"}
+    if (len(parts) < 2 or parts[0] not in {"Cohesian", "Profile", "Projects"}
             or any(not re.fullmatch(r"[A-Za-z0-9._-]+", p) or p in {".", ".."} for p in parts)
             or PurePosixPath(path).as_posix() != path):
         raise SystemExit(f"ERROR: Unsafe or invalid project path: {path!r}")
