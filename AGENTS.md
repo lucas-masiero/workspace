@@ -1,6 +1,6 @@
 # Agent Instructions — Workspace Index
 
-This directory is a **routing index for multiple independent Git repositories**, not a monorepo or a shared application. The root Git repository is responsible only for this index's documentation, manifest, and scripts. `Cohesian/` and `Profile/` are separate local project trees and are ignored by the root `.gitignore`.
+This directory is a **routing index for multiple independent Git repositories**, not a monorepo or a shared application. The root Git repository is responsible only for this index's documentation, manifest, and scripts. `Cohesian/`, `Profile/`, and `Projects/` are separate local project trees and are ignored by the root `.gitignore`.
 
 ## Read first
 

@@ -4,7 +4,7 @@
 
 `Workspace/` is the **root of a tree of independent Git repositories**. Its own Git history contains only the index: `README.md`, `AGENTS.md`, `ARCHITECTURE.md`, `repositories.json`, `.gitignore`, and its two scripts.
 
-`Cohesian/` and `Profile/` are **local containers**, ignored completely by the index Git repository. Their contents are standalone repositories with their own remotes, branches, and histories. The index does not use Git submodules or try to coordinate commits across projects.
+`Cohesian/`, `Profile/`, and `Projects/` are **local containers**, ignored completely by the index Git repository. Their contents are standalone repositories with their own remotes, branches, and histories. The index does not use Git submodules or try to coordinate commits across projects.
 
 ## 2. Full repository tree
 
@@ -25,6 +25,7 @@ Workspace/                               # root index repository (not a project 
 │   ├── site/                            # cohesian/site
 │   ├── essays/
 │   │   ├── bookly-up/                   # cohesian-essays/bookly-up
+│   │   ├── composition-in-go/           # cohesian-essays/composition-in-go
 │   │   ├── intro-to-golang/             # cohesian-essays/intro-to-golang
 │   │   └── research/                    # cohesian/research
 │   └── tools/
@@ -47,7 +48,7 @@ Workspace/                               # root index repository (not a project 
         └── payment/                     # bookly-up/payment
 ```
 
-**Total: 16 project repositories** — 12 under `Cohesian/`, 4 under `Profile/`. The index is a separate outer Git repository, if initialized or cloned.
+**Total: 20 project repositories** — 13 under `Cohesian/`, 4 under `Profile/`, and 3 under `Projects/`. The index is a separate outer Git repository, if initialized or cloned.
 
 `repositories.json` contains these same path mappings in a machine-readable form and is the authoritative routing list for the bootstrap. The tree above exists to make the architecture easy to inspect without tooling.
 
@@ -57,7 +58,7 @@ Workspace/                               # root index repository (not a project 
 
 - **`core`** — foundational principles and ideas of the organization.
 - **`site`** — the organization's public frontend, which presents essays and tools.
-- **`essays`** — published written works. `intro-to-golang` is a book introducing Go; `bookly-up` is a book about a booking-system architecture. `research` is a separate research repository under the `cohesian` GitHub namespace.
+- **`essays`** — published written works. `intro-to-golang` is a book introducing Go; `bookly-up` is a book about a booking-system architecture; `composition-in-go` is a KGraph-authored essay in progress about recursive Go processors and combinatorial configuration potential. `research` is a separate research repository under the `cohesian` GitHub namespace.
 - **`tools`** — independently developed tools: `devky`, `josly`, `k-graph`, `loci`, `optional`, `resumy`, and `tether`. In particular, `resumy` is the resume PDF generator. The specific purpose and implementation of the other tools must be learned from their individual repositories.
 
 ### The `front` presentation boundary
@@ -117,10 +118,10 @@ flowchart LR
 
 ## 7. Operational model
 
-1. Clone or unpack the **index repository** into `Workspace/`. Its two project directories may not yet exist.
+1. Clone or unpack the **index repository** into `Workspace/`. Its three project-family directories may not yet exist.
 2. On Termux, run `scripts/setup-termux.sh` to install the packages and configure GitHub SSH / CLI authentication; **no repositories are cloned by this script**.
 3. Run `scripts/bootstrap.sh` to read `repositories.json`, create directory parents, and clone **only missing project repositories** over SSH.
 4. The bootstrap treats existing valid repositories as complete, regardless of whether they are current. It does not `fetch`, `pull`, `reset`, or delete local data.
-5. Use Git separately inside each project. The root index Git only versions the map, docs, and scripts; it ignores `Cohesian/` and `Profile/` entirely.
+5. Use Git separately inside each project. The root index Git only versions the map, docs, and scripts; it ignores `Cohesian/`, `Profile/`, and `Projects/` entirely.
 
 This is an index and bootstrap arrangement, **not** a monorepo, package manager, deployment system, or automatic multi-repository synchronization tool.

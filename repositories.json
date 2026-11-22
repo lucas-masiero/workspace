@@ -4,6 +4,7 @@
     { "path": "Cohesian/core", "github": "cohesian/core", "role": "Cohesian's principles and foundational ideas" },
     { "path": "Cohesian/site", "github": "cohesian/site", "role": "Cohesian's public website and catalog of its work" },
     { "path": "Cohesian/essays/bookly-up", "github": "cohesian-essays/bookly-up", "role": "Book about a booking-system architecture" },
+    { "path": "Cohesian/essays/composition-in-go", "github": "cohesian-essays/composition-in-go", "role": "KGraph essay on recursive Go processor composition and combinatorial configuration potential" },
     { "path": "Cohesian/essays/intro-to-golang", "github": "cohesian-essays/intro-to-golang", "role": "Book introducing Go" },
     { "path": "Cohesian/essays/research", "github": "cohesian/research", "role": "Research repository" },
     { "path": "Cohesian/tools/devky", "github": "cohesian-tools/devky", "role": "Cohesian tool" },
