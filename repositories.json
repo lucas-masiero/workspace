@@ -115,6 +115,10 @@
       "path": "Cohesian/front",
       "github": "cohesian/front",
       "role": "Central schema-validated tool and essay presentations"
+    },
+    {
+      "path": "Cohesian/essays/dimensional-invariance",
+      "github": "cohesian-essays/dimensional-invariance"
     }
   ]
 }

@@ -38,6 +38,7 @@ are retained when their implementations have been reused in a newer tool.
 | `Cohesian/tools/typy` | `cohesian-tools/typy` |
 | `Cohesian/arch` | `cohesian/arch` |
 | `Cohesian/front` | `cohesian/front` |
+| `Cohesian/essays/dimensional-invariance` | `cohesian-essays/dimensional-invariance` |
 <!-- workspace-repositories:end -->
 
 ## Consumer-owned presentation
