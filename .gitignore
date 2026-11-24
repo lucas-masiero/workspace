@@ -6,3 +6,10 @@
 
 .DS_Store
 /.worktrees/
+
+# Local CLI installation and Python build/test output.
+/.venv-cli/
+__pycache__/
+*.egg-info/
+/cli/build/
+/cli/dist/

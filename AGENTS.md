@@ -1,6 +1,6 @@
 # Agent Instructions — Workspace Index
 
-This directory is a **routing index for multiple independent Git repositories**, not a monorepo or a shared application. The root Git repository is responsible only for this index's documentation, manifest, and scripts. `Cohesian/`, `Profile/`, and `Projects/` are separate local project trees and are ignored by the root `.gitignore`.
+This directory is a **routing index for multiple independent Git repositories**, not a monorepo or a shared application. The root Git repository owns this index's documentation, manifest, setup scripts and Python workspace CLI. `Cohesian/`, `Profile/`, and `Projects/` are separate local project trees and are ignored by the root `.gitignore`.
 
 ## Read first
 
@@ -35,7 +35,18 @@ Do **not** infer technical specifics—API routes, file paths, schema names, exp
 
 ## Editing the index itself
 
-Keep `ARCHITECTURE.md` readable for humans and `repositories.json` precise for machines. When adding, removing, or relocating repositories, update both together, and update the root `.gitignore` if a new top-level project family is introduced. The setup script configures Termux; the bootstrap script materializes the repository map. Keep those responsibilities separate.
+Keep `ARCHITECTURE.md` readable for humans and `repositories.json` precise for machines. When adding, removing, or relocating repositories, update both together, and update the root `.gitignore` if a new top-level project family is introduced. Seeds configure Termux/macOS and install the CLI; bootstrap materializes the repository map. Keep those responsibilities separate.
+
+Read cli/README.md before changing the CLI. list/status/fetch use only
+repositories.json for inventory, with all, owner, or owner/name selection.
+All share the local tree and -l display depth.
+Status compares local main with cached origin/main and notes current worktree
+edits without switching branches. Fetch refreshes origin; never automatically
+pull/reset/merge/commit/push. Missing checkouts are normal. login delegates
+interactive authentication to gh/SSH. Do not add check or publishing commands
+without a new request. Keep runtime dependencies in Python's standard library.
+Test CLI changes with PYTHONPATH=cli/src python3 -m unittest discover -s cli/tests.
+Seed scripts target Bash 3.2+ as well as Termux Bash; never upgrade system pip.
 
 Both frontend consumers use fetched/ and npm run fetch / npm run build.
 Use --local for unpublished sibling inputs. Keep Core unchanged as a reference

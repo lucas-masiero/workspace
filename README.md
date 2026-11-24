@@ -15,7 +15,10 @@ The `Cohesian/`, `Profile/`, and `Projects/` directories are deliberately ignore
 - **[`AGENTS.md`](AGENTS.md)** — instructions for AI agents working anywhere in this workspace.
 - **[`ARCHITECTURE.md`](ARCHITECTURE.md)** — the complete repository tree, GitHub mappings, responsibilities, and information flows.
 - **[`repositories.json`](repositories.json)** — machine-readable, canonical map from local paths to GitHub repositories.
-- **[`scripts/setup-termux.sh`](scripts/setup-termux.sh)** — install and configure the Termux environment; does not clone projects.
+- **[`cli/README.md`](cli/README.md)** — installable Python CLI: repository trees, main status, fetch and GitHub login.
+- **[`scripts/termux/setup.sh`](scripts/termux/setup.sh)** — seed Termux with pkg, install the CLI and authenticate GitHub.
+- **[`scripts/macos/setup.sh`](scripts/macos/setup.sh)** — seed macOS with Homebrew, install the CLI and authenticate GitHub.
+- **[`scripts/install-cli.sh`](scripts/install-cli.sh)** — install just the CLI on an already configured computer/phone.
 - **[`scripts/bootstrap.sh`](scripts/bootstrap.sh)** — create missing directories and clone missing project repositories; does not install packages.
 
 ## Getting started
@@ -26,20 +29,54 @@ On a new **Termux** installation:
 
 ```bash
 cd ~/Workspace
-bash scripts/setup-termux.sh
+bash scripts/termux/setup.sh
 bash scripts/bootstrap.sh
 ```
 
-On **macOS** (with Git, SSH authentication, and Python 3 already configured):
+On **macOS**:
 
 ```bash
 cd ~/Workspace
+bash scripts/macos/setup.sh
 bash scripts/bootstrap.sh
 ```
 
+Both seed scripts install Git, GitHub CLI, Python and Node.js, install the
+workspace command in an isolated local environment, then run workspace repo
+login. Termux also installs OpenSSH, python-pip and python-ensurepip-wheels through pkg; macOS uses
+Homebrew and the system SSH client. If Homebrew is missing, its official
+interactive installer runs first. Seeds do not clone project repos. The
+original scripts/setup-termux.sh entry point also remains usable.
+
 The bootstrap is idempotent: existing valid repositories are left alone, even if behind their remotes. It neither fetches nor pulls, and never deletes unexpected directories. Re-running it fills in missing repositories.
 
-**Initial clone:** This repository must already exist locally before either script can run. Once you publish the index to GitHub, clone it into `~/Workspace` first. A public index can be cloned over HTTPS before SSH is configured; a private index requires access first (or a downloaded archive).
+**Initial clone:** This repository must already exist locally before either script can run. Clone lucas-masiero/workspace into `~/Workspace` first. A private index requires GitHub access before the clone (or a downloaded archive); the seed then prepares the remaining tooling and verifies authentication.
+
+On Termux, keep the clone in its home directory, such as ~/Workspace. For an
+already prepared environment, run only bash scripts/install-cli.sh.
+
+## Daily repository commands
+
+```sh
+workspace repo list
+workspace repo list cohesian-tools -l 3
+workspace repo status
+workspace repo status cohesian/site
+workspace repo fetch
+workspace repo fetch lucas-masiero
+workspace repo login
+```
+
+Queries default to all, or select an exact GitHub owner or owner/name.
+All three inspection/fetch commands render the registered local tree. -l N
+limits its displayed depth; collapsed groups summarize their hidden leaves.
+The query, not depth, selects which repositories are fetched.
+
+Status compares local main with cached origin/main: ✅ synced, 🔽 behind,
+🔼 ahead/local edits, ⚠️ mixed or error. ⚪ means not cloned. Run fetch before
+status to refresh remote information. fetch updates references without pulling
+or changing branches/files. Missing checkouts are skipped. See cli/README.md
+for exact status rules, root discovery and installation options.
 
 ## Git boundaries
 

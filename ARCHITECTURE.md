@@ -2,7 +2,7 @@
 
 Workspace is an index of independent repositories, with three local families:
 Cohesian, Profile and Projects. Its own Git history owns this documentation,
-repositories.json and bootstrap scripts. It ignores all nested project trees;
+repositories.json, setup scripts and the Python Workspace CLI. It ignores all nested project trees;
 there are no Git submodules and no shared application build.
 
 ## Routing
@@ -77,3 +77,20 @@ native CV schema are implementation features, not catalog front exports.
 Use Git independently in each repo. The root history versions only routing,
 documentation and bootstrap scripts. A future functions.json can define
 add-tool/add-essay workflows; it is still a planned interface.
+
+## Workspace CLI and device seeds
+
+cli/ is an installable Python package (pyproject.toml, src/workspace_cli and
+tests). It belongs to this index repository and reads repositories.json;
+there is no second inventory or automatic Git discovery. repo list/status/fetch
+accept all (default), a GitHub owner, or owner/name and render the local tree.
+-l limits display depth with descendant summaries; the query controls operation
+scope. Status compares local main with cached origin/main, alongside working
+tree edits. Fetch updates origin references without touching working files or
+switching branches. repo login delegates device authentication to gh and SSH.
+
+scripts/termux/setup.sh uses pkg. scripts/macos/setup.sh uses Homebrew. Both
+install development tooling and invoke scripts/install-cli.sh, then login.
+The CLI lives in a local, ignored .venv-cli and is linked into ~/.local/bin.
+The independent bootstrap remains responsible only for cloning absent leaves.
+No project-repository data flow or publishing responsibility changes.
