@@ -43,10 +43,21 @@ All share the local tree and -l display depth.
 Status compares local main with cached origin/main and notes current worktree
 edits without switching branches. Fetch refreshes origin; never automatically
 pull/reset/merge/commit/push. Missing checkouts are normal. login delegates
-interactive authentication to gh/SSH. Do not add check or publishing commands
-without a new request. Keep runtime dependencies in Python's standard library.
+interactive authentication to gh/SSH. Keep runtime dependencies in Python's standard library.
 Test CLI changes with PYTHONPATH=cli/src python3 -m unittest discover -s cli/tests.
 Seed scripts target Bash 3.2+ as well as Termux Bash; never upgrade system pip.
+
+repo check is a read-only comparison/discovery under Cohesian/Profile/Projects;
+stop scanning at Git boundaries and never follow symlinks. workspace sync is
+a separate group: index --add/--remove and workdir --clone/--purge (-p).
+Require one explicit mode per call; no mode is a no-op and there is no all mode.
+Queries remain all, owner, or owner/name, with display-only depth.
+Index mutations update the marked table in ARCHITECTURE.md as well as the JSON.
+Preserve existing fields, files and checkouts; reject conflicting routes/origins.
+Purge moves only unregistered repos to ignored .trash/, preserving their tree,
+Git history and local edits. trash init is idempotent; trash empty explicitly
+permanently clears only initialized Workspace trash. Never empty it incidentally
+while implementing features. Tests use temporary roots and local Git remotes.
 
 Both frontend consumers use fetched/ and npm run fetch / npm run build.
 Use --local for unpublished sibling inputs. Keep Core unchanged as a reference

@@ -12,9 +12,7 @@ class Node:
     repo: Repository | None = None
 
     def leaves(self) -> list[Repository]:
-        if self.repo:
-            return [self.repo]
-        return [repo for child in self.children.values() for repo in child.leaves()]
+        return ([self.repo] if self.repo else []) + [repo for child in self.children.values() for repo in child.leaves()]
 
 
 def render_tree(name: str, repositories: list[Repository], results: dict[str, Result] | None = None,
@@ -38,7 +36,7 @@ def render_tree(name: str, repositories: list[Repository], results: dict[str, Re
         value = f"{name}/ ({len(leaves)} {'repo' if len(leaves) == 1 else 'repos'})"
         if results is not None:
             counts = Counter(results[repo.path].symbol for repo in leaves)
-            value += "  " + "  ".join(f"{symbol} {counts[symbol]}" for symbol in ("✅", "🔽", "🔼", "⚠️", "⚪") if counts[symbol])
+            value += "  " + "  ".join(f"{symbol} {counts[symbol]}" for symbol in ("✅", "❌", "🔽", "🔼", "⚠️", "⚪") if counts[symbol])
         return value
 
     def walk(node: Node, prefix: str, level: int) -> None:

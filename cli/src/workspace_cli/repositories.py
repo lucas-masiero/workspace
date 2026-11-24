@@ -49,21 +49,33 @@ def github_name(url: str) -> str | None:
 
 
 def checkout(root: Path, repo: Repository) -> Path | None:
+    directory = local_path(root, repo.path)
+    if not directory.exists():
+        return None
+    if repository_name(directory) != repo.github.casefold():
+        raise WorkspaceError("origin does not match the registered GitHub repository")
+    return directory
+
+
+def local_path(root: Path, relative: str) -> Path:
     directory = root
-    for part in repo.path.split("/"):
+    for part in relative.split("/"):
         directory /= part
         if directory.is_symlink():
             raise WorkspaceError("Checkout path contains a symlink; skipped")
-    if not directory.exists():
-        return None
+    return directory
+
+
+def repository_name(directory: Path) -> str:
     if not directory.is_dir():
         raise WorkspaceError("Checkout path is not a directory")
     if Path(git(directory, "rev-parse", "--show-toplevel")).resolve() != directory.resolve():
         raise WorkspaceError("Path is not a standalone repository")
     urls = git(directory, "config", "--get-all", "remote.origin.url").splitlines()
-    if len(urls) != 1 or github_name(urls[0]) != repo.github.casefold():
-        raise WorkspaceError("origin does not match the registered GitHub repository")
-    return directory
+    name = github_name(urls[0]) if len(urls) == 1 else None
+    if name is None:
+        raise WorkspaceError("Expected one GitHub repository as origin")
+    return name
 
 
 def classify(ahead: int, behind: int, dirty: bool) -> str:

@@ -15,7 +15,7 @@ The `Cohesian/`, `Profile/`, and `Projects/` directories are deliberately ignore
 - **[`AGENTS.md`](AGENTS.md)** — instructions for AI agents working anywhere in this workspace.
 - **[`ARCHITECTURE.md`](ARCHITECTURE.md)** — the complete repository tree, GitHub mappings, responsibilities, and information flows.
 - **[`repositories.json`](repositories.json)** — machine-readable, canonical map from local paths to GitHub repositories.
-- **[`cli/README.md`](cli/README.md)** — installable Python CLI: repository trees, main status, fetch and GitHub login.
+- **[`cli/README.md`](cli/README.md)** — installable Python CLI: repository trees, main status, fetch, index/workdir reconciliation, trash and GitHub login.
 - **[`scripts/termux/setup.sh`](scripts/termux/setup.sh)** — seed Termux with pkg, install the CLI and authenticate GitHub.
 - **[`scripts/macos/setup.sh`](scripts/macos/setup.sh)** — seed macOS with Homebrew, install the CLI and authenticate GitHub.
 - **[`scripts/install-cli.sh`](scripts/install-cli.sh)** — install just the CLI on an already configured computer/phone.
@@ -64,11 +64,18 @@ workspace repo status
 workspace repo status cohesian/site
 workspace repo fetch
 workspace repo fetch lucas-masiero
+workspace repo check
 workspace repo login
+workspace sync index --add
+workspace sync index --remove
+workspace sync workdir --clone
+workspace sync workdir --purge owner/repo
+workspace trash init
+workspace trash empty
 ```
 
 Queries default to all, or select an exact GitHub owner or owner/name.
-All three inspection/fetch commands render the registered local tree. -l N
+Inspection/fetch/sync commands render the local repository tree. -l N
 limits its displayed depth; collapsed groups summarize their hidden leaves.
 The query, not depth, selects which repositories are fetched.
 
@@ -77,6 +84,17 @@ Status compares local main with cached origin/main: ✅ synced, 🔽 behind,
 status to refresh remote information. fetch updates references without pulling
 or changing branches/files. Missing checkouts are skipped. See cli/README.md
 for exact status rules, root discovery and installation options.
+
+check compares the index to checkouts: ✅ matching, ❌ missing, ⚠️ new or
+blocked. It discovers independent Git roots within the three project families.
+sync changes only the explicitly selected side: index --add/--remove registers
+new local repos or drops missing entries; workdir --clone/--purge fills missing
+checkouts or moves unregistered ones into recoverable .trash/. -p aliases
+--purge. With no mode, sync does nothing; there is no combined all mode.
+Index changes also update ARCHITECTURE.md's managed routing table.
+
+trash init is idempotent and runs automatically on purge. trash empty
+permanently clears saved trash contents. These operations never commit or push.
 
 ## Git boundaries
 

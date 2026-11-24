@@ -12,6 +12,7 @@ Registered checkouts may be absent: bootstrap clones missing repos, preserves
 existing directories and never resets or pulls. Existing source repositories
 are retained when their implementations have been reused in a newer tool.
 
+<!-- workspace-repositories:start -->
 | Local path | GitHub repository |
 |---|---|
 | `Cohesian/core` | `cohesian/core` |
@@ -37,6 +38,7 @@ are retained when their implementations have been reused in a newer tool.
 | `Cohesian/tools/typy` | `cohesian-tools/typy` |
 | `Cohesian/arch` | `cohesian/arch` |
 | `Cohesian/front` | `cohesian/front` |
+<!-- workspace-repositories:end -->
 
 ## Consumer-owned presentation
 
@@ -74,20 +76,31 @@ absent; bootstrap fills missing clones without pulling/resetting existing work.
 Projects stays independent. K-graph's runtime `dist front` format and Resumy's
 native CV schema are implementation features, not catalog front exports.
 
-Use Git independently in each repo. The root history versions only routing,
-documentation and bootstrap scripts. A future functions.json can define
+Use Git independently in each repo. The root history owns routing,
+documentation, the workspace CLI and setup/bootstrap scripts. A future functions.json can define
 add-tool/add-essay workflows; it is still a planned interface.
 
 ## Workspace CLI and device seeds
 
 cli/ is an installable Python package (pyproject.toml, src/workspace_cli and
 tests). It belongs to this index repository and reads repositories.json;
-there is no second inventory or automatic Git discovery. repo list/status/fetch
+there is no second inventory. repo list/status/fetch
 accept all (default), a GitHub owner, or owner/name and render the local tree.
 -l limits display depth with descendant summaries; the query controls operation
 scope. Status compares local main with cached origin/main, alongside working
 tree edits. Fetch updates origin references without touching working files or
 switching branches. repo login delegates device authentication to gh and SSH.
+
+repo check compares registered routes with local origins and discovers new
+independent Git roots within the three project families, stopping at each
+repository boundary. It is read-only. workspace sync operates on a named side:
+index --add/--remove updates the manifest and the marked routing table above;
+workdir --clone/--purge fills missing indexed checkouts or moves unregistered
+ones into .trash/<unique-batch>/<original-path>. No mode means no changes.
+There is no combined all mode. -p aliases --purge; queries/depth work as above.
+trash init creates managed .trash idempotently (purge also does this).
+trash empty permanently clears its saved contents. The CLI never commits or
+pushes index changes. Sync/trash mutations share a workspace-local lock.
 
 scripts/termux/setup.sh uses pkg. scripts/macos/setup.sh uses Homebrew. Both
 install development tooling and invoke scripts/install-cli.sh, then login.

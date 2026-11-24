@@ -2,7 +2,7 @@
 
 A Python 3.10+ CLI for the repository leaves registered in Workspace's
 repositories.json. There are no Python runtime dependencies. Git is required
-for status/fetch; GitHub CLI and OpenSSH are required for login.
+for repository inspection and sync; GitHub CLI and OpenSSH are required for login.
 
 ## Install
 
@@ -36,10 +36,18 @@ workspace repo status lucas-masiero -l 2
 workspace repo fetch
 workspace repo fetch cohesian-tools
 workspace repo fetch cohesian/site
+workspace repo check
+workspace repo check cohesian-tools -l 3
 workspace repo login
+workspace sync index --add
+workspace sync index --remove
+workspace sync workdir --clone
+workspace sync workdir --purge person/example
+workspace trash init
+workspace trash empty
 ```
 
-list, status and fetch accept one optional query: all (the default), an exact
+list, status, fetch, check and the sync targets accept one optional query: all (the default), an exact
 GitHub owner, or owner/name. Matching ignores case. The resulting tree retains
 the local paths from the index; an owner filter uses the GitHub namespace,
 not a local directory name. For example, cohesian matches cohesian/site and
@@ -52,7 +60,7 @@ only the index; it works without Git or any local project checkouts.
 `-l N` / `--level N` controls display depth, like tree. Root is level 0;
 `-l 1` shows the project families. The default displays the complete tree.
 Hidden descendants are summarized with repository counts and status symbols.
-Depth never changes the query's scope: fetch still processes all selected
+Depth never changes the query's scope: fetch and sync still process all selected
 leaves, including those below the displayed level.
 
 ## Status always compares main
@@ -83,6 +91,83 @@ Commands exit 0 on success (including skipped absent checkouts), 1 on an
 operation/configuration failure, 2 on usage errors, and 130 on interruption.
 Ahead/behind/mixed states are information, not execution failures. login may
 also return GitHub CLI's authentication exit code.
+
+## Check the index against the workdir
+
+`workspace repo check` is local and read-only. It compares registered paths
+and GitHub origins, then discovers unregistered repositories under Cohesian/,
+Profile/ and Projects/. It does not inspect Git commit synchronization; use
+status for that.
+
+- ✅ The registered path contains a standalone checkout with the expected origin.
+- ❌ Its checkout is absent or its target directory is empty.
+- ⚠️ A new local repository is not indexed, or a path/origin cannot be matched.
+
+Discovery stops at each .git boundary, avoiding dependencies, nested Git
+objects and source internals. It skips symlinks, hidden directories,
+node_modules and __pycache__. The index repo itself is excluded. Invalid or
+non-GitHub origins are reported but cannot be registered automatically.
+Check exits 1 when there are missing/new/blocked entries in the query, 0 when
+all selected entries match. list/status/fetch continue to use only the index.
+
+## Sync one side explicitly
+
+| Command | Change |
+|---|---|
+| `workspace sync index --add` | Add discovered local repositories to repositories.json |
+| `workspace sync index --remove` | Remove index entries whose checkouts are missing locally |
+| `workspace sync workdir --clone` | Clone indexed repos that are absent locally |
+| `workspace sync workdir --purge` | Move local repos absent from the index into .trash/ |
+
+Each target accepts exactly one mode per call. With no mode, sync does nothing.
+There is no combined all mode. The query still defaults to all and can select
+an owner or owner/name; -l limits only the displayed result tree.
+
+```sh
+workspace sync index --add cohesian-tools
+workspace sync index --remove person/old-project
+workspace sync workdir --clone cohesian/site
+workspace sync workdir -p person/unused-project
+```
+
+-p is the short alias for --purge. The result tree reports the actions taken.
+Sync never commits/pushes, pulls, resets or switches an existing checkout.
+Index add/remove preserve existing metadata and update the managed repository
+table in ARCHITECTURE.md alongside repositories.json. Duplicate GitHub names,
+nested routes and concurrent index edits are rejected; failed writes roll back.
+Review and commit index changes yourself after running these commands.
+
+Clone uses SSH authentication (repo login) and stages the checkout before
+installing it at its indexed path. Existing nonempty directories and mismatched
+origins are reported and preserved. An empty target directory can be filled.
+Missing entries are removed only by explicit sync index --remove.
+
+Purge preserves the complete checkout, Git history and uncommitted files at:
+
+```text
+.trash/
+├── .workspace-trash.json
+└── <timestamp-and-id>/
+    └── Profile/unused-project/
+        ├── .git/
+        └── ...
+```
+
+The original project path is preserved inside each uniquely named batch, and
+the command reports its recovery path. To recover it, move that directory back
+to its original vacant path. Purge refuses indexed paths/ancestors and linked
+worktrees rather than breaking their external Git metadata.
+
+## Trash
+
+`workspace trash init` creates the ignored .trash directory idempotently.
+Purge calls the same initializer automatically. `workspace trash empty`
+**permanently deletes its saved contents**, retaining .trash and its ownership
+marker. It does not touch active checkouts or the index. Emptying absent trash
+does nothing. Populated unmanaged directories and symlinked trash/markers are
+refused. Sync and trash operations share a lock to prevent overlapping edits.
+If a process is killed, inspect any .workspace-sync.lock and recovery directory
+before manually clearing a stale lock.
 
 ## Finding the workspace
 
@@ -119,5 +204,5 @@ bash -n scripts/install-cli.sh scripts/termux/setup.sh scripts/macos/setup.sh sc
 ```
 
 Git tests use local bare remotes and temporary checkouts, never live GitHub
-repositories. check, pull, push, content publishing and add-tool/add-essay are
-outside this first CLI version.
+repositories. pull, push, content publishing and add-tool/add-essay remain
+outside this CLI.

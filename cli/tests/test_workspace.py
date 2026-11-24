@@ -221,8 +221,8 @@ class IndexTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("No registered", error)
 
-    def test_invalid_depth_and_unimplemented_check_are_helpful_errors(self):
-        for args in [("list", "-l", "0"), ("status", "-l", "bad"), ("check",)]:
+    def test_invalid_depth_and_unknown_commands_are_helpful_errors(self):
+        for args in [("list", "-l", "0"), ("status", "-l", "bad"), ("unknown",)]:
             with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as error:
                 self.invoke(*args)
             self.assertEqual(error.exception.code, 2)

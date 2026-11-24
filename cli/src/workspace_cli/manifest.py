@@ -5,6 +5,8 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 
+FAMILIES = ("Cohesian", "Profile", "Projects")
+
 
 class WorkspaceError(Exception):
     """A user-facing configuration or operation error."""
@@ -36,6 +38,10 @@ def load_repositories(root: Path) -> list[Repository]:
         data = json.loads((root / "repositories.json").read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise WorkspaceError(f"Cannot read repositories.json: {error}") from error
+    return validate_manifest(data)
+
+
+def validate_manifest(data: dict) -> list[Repository]:
     if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("repositories"), list):
         raise WorkspaceError("Expected repositories.json version 1 with a repositories list")
     repos, paths, names = [], set(), set()
@@ -46,7 +52,7 @@ def load_repositories(root: Path) -> list[Repository]:
         if not isinstance(relative, str) or not isinstance(github, str):
             raise WorkspaceError("Repository path and github must be strings")
         parts = relative.split("/")
-        if (len(parts) < 2 or parts[0] not in {"Cohesian", "Profile", "Projects"}
+        if (len(parts) < 2 or parts[0] not in FAMILIES
                 or any(not re.fullmatch(r"[A-Za-z0-9._-]+", p) or p in {".", ".."} for p in parts)
                 or PurePosixPath(relative).as_posix() != relative):
             raise WorkspaceError(f"Unsafe repository path: {relative!r}")
