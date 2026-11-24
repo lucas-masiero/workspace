@@ -38,70 +38,42 @@ are retained when their implementations have been reused in a newer tool.
 | `Cohesian/arch` | `cohesian/arch` |
 | `Cohesian/front` | `cohesian/front` |
 
-## Cohesian
+## Consumer-owned presentation
 
-The organization's repositories are **arch**, **core**, **front** and **site**.
-`Cohesian/tools/` and `Cohesian/essays/` are local namespace containers for
-independent repos; their GitHub namespaces are cohesian-tools and
-cohesian-essays. Research retains its existing cohesian/research mapping.
-
-- **arch** owns the full organization architecture and operating workflows.
-- **core** owns accepted principles/identity and its versioned JSON export.
-- **front** owns one central catalog: tools/schema.json with tools/<slug>/
-  instance.json and assets/, and essays/schema.json with essays/<slug>/
-  instance.json and assets/. Essays declare book or paper.
-- **site** consumes Core and Front; it owns components, routes and deployment.
+Cohesian/arch owns the detailed architecture; see its README.md. Central
+Cohesian/front owns the shared tool/essay catalog. Individual tools and essays
+remain agnostic and contain no catalog front folders or schema copies.
+Core is a currently immutable reference; its existing principles.json stays.
 
 ```mermaid
 flowchart LR
-  Core["Cohesian/core · principles.json"] --> Site["Cohesian/site · fetched snapshots"]
-  Front["Cohesian/front · tools + essays"] --> Site
-  Site --> Build["npm run build · static website"]
-  Resume["Profile/resume · personal data + CV"] --> Portfolio["Profile/portfolio"]
-  Site -->|"Cohesian project-card presentation"| Portfolio
+  Core["Core reference"] --> SiteData["Cohesian/site/fetched"]
+  Front["Central Front"] --> SiteData
+  SiteData --> SiteView["Site-owned Core presentation and frontend"]
+  Resume["Native Resume + PDF/JSON"] --> PortfolioData["Profile/portfolio/fetched"]
+  SiteView -->|"native Site settings/assets"| PortfolioData
+  PortfolioData --> PortfolioView["Portfolio-owned Resume and Cohesian views"]
 ```
 
-Front replaces the former per-project front-import arrangement for Site's
-catalog. Individual implementations/works remain the factual references;
-public metadata is deliberately authored once in Front. The existing Site
-project-card export remains separate for Resume and Portfolio.
+Both consumer repos use `npm run fetch` followed by `npm run build`.
+`--local` reads unpublished sibling inputs; default fetch reads published refs.
+Build uses only versioned fetched/ data and consumer-owned presentation code.
+A source has no responsibility for how a downstream frontend displays it.
 
-See [Cohesian Arch](Cohesian/arch/README.md) for complete contracts, boundaries,
-source acquisition, validation and publication workflows. This index does not
-redefine those application contracts.
+Site's native settings live in site.json, Core's adaptation in
+presentation/core.json and src/. Portfolio's field selection and Cohesian
+cover/card assets/styles live in its own presentation/. Resume owns only its
+native CV sources, PDF/JSON pair and generator configuration. Site and Resume
+do not expose self-presentation packages.
 
-## Daily catalog update
+## Routing and operation
 
-Add a tool or essay instance and its assets in Cohesian/front, run its checks,
-review and push. Then, from Cohesian/site:
+repositories.json remains the exact path/GitHub routing source. No repositories
+were relocated by this ownership change. Existing registered checkouts may be
+absent; bootstrap fills missing clones without pulling/resetting existing work.
+Projects stays independent. K-graph's runtime `dist front` format and Resumy's
+native CV schema are implementation features, not catalog front exports.
 
-```sh
-npm run fetch
-npm run build
-```
-
-For unpublished sibling content use `npm run fetch -- --local`. Fetch reads
-only the central Front and Core repos. Build/dev use committed snapshots and
-need no source repo credentials. New folders are discovered automatically;
-new unplaced essays get a default shelf. Review/test and commit/push Site to
-publish through its existing deployment.
-
-## Profile and Projects
-
-Resume owns personal/career data; Resumy generates its PDF and matching JSON
-snapshot. Portfolio consumes Resume and Site's Cohesian presentation. Typy
-remains the Go toolbox for ptr, errlay, opt and opt/nullable; the original
-Optional repository is independently registered and is not implicitly retired.
-Projects remains an independent family for Bookly auth/booking/payment modules.
-
-## Index operations
-
-Read README.md and AGENTS.md before routing work. `scripts/setup-termux.sh`
-configures the environment; `scripts/bootstrap.sh` materializes registered
-repositories. Bootstrap supports Cohesian, Profile and Projects and leaves
-existing work alone. Git actions are per-repository; pushing this root does
-not push nested projects.
-
-A future functions.json could define add-tool and add-essay operations with
-namespace checks, central Front authoring, Site refresh and index updates.
-Those functions are a planned interface, not implemented commands today.
+Use Git independently in each repo. The root history versions only routing,
+documentation and bootstrap scripts. A future functions.json can define
+add-tool/add-essay workflows; it is still a planned interface.

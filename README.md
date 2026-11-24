@@ -59,3 +59,8 @@ instance.json + assets entries. After validating and pushing Front, run
 `npm run fetch` and `npm run build` inside Cohesian/site. Its build uses a
 committed snapshot, so source credentials are needed only for fetch.
 Workspace-level add-tool/add-essay functions are a future step.
+
+Presentation belongs to consumers: Site owns the Core view; Portfolio owns
+Resume and Cohesian views. Both consumers use fetched/ and the same fetch/build
+commands. Source tools, essays, Resume and Site expose no front packages.
+See Cohesian/arch/README.md for the updated data boundaries.

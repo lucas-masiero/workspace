@@ -26,9 +26,9 @@ This directory is a **routing index for multiple independent Git repositories**,
 - **Cohesian `arch`** owns the organization architecture and workflows.
 - **Cohesian `front`** owns the central tool/essay presentation catalog and schemas. Site consumes this registry and Core; it no longer imports individual works’ front folders. Read Front’s own AGENTS.md before adding instances or assets.
 - **Cohesian `essays` and `tools`** are namespace containers of independent implementation/authoring repositories. They remain factual sources for the presentations; preserve their histories and local work.
-- **Cohesian `site`** publishes the organization catalog and exposes a smaller Cohesian presentation/card that **Profile `portfolio`** consumes.
-- **Profile `resume`** owns structured personal and career data; its `resume.json` conforms to a schema used by **`resumy`** to generate a formatted `resume.pdf`.
-- **Profile `portfolio`** presents personal data from `Profile/resume` and the Cohesian presentation from `Cohesian/site`; do not duplicate either source of truth without cause.
+- **Cohesian `site`** consumes Core reference data and Central Front through its own fetched/ snapshot. It owns Core’s visual adaptation and its native app settings, and does not export a self-presentation package.
+- **Profile `resume`** owns native CV JSON, photo/theme and its matching PDF/JSON artifacts, generated with Resumy. It has no frontend export or dependency on Site catalogs.
+- **Profile `portfolio`** consumes native Resume and Site data into its own fetched/ snapshot and owns their presentation adapters, schemas, cover/card assets and styles. Keep producer nodes agnostic; never require their own front folders.
 - **Projects** is an independant node from the rest, containing personal projects from different scopes and owners.
 
 Do **not** infer technical specifics—API routes, file paths, schema names, export formats, build tools, or deploy targets—from these conceptual relationships. Inspect the actual projects before implementing integration changes.
@@ -36,3 +36,8 @@ Do **not** infer technical specifics—API routes, file paths, schema names, exp
 ## Editing the index itself
 
 Keep `ARCHITECTURE.md` readable for humans and `repositories.json` precise for machines. When adding, removing, or relocating repositories, update both together, and update the root `.gitignore` if a new top-level project family is introduced. The setup script configures Termux; the bootstrap script materializes the repository map. Keep those responsibilities separate.
+
+Both frontend consumers use fetched/ and npm run fetch / npm run build.
+Use --local for unpublished sibling inputs. Keep Core unchanged as a reference
+unless an explicit principle change is requested. Catalog schemas stay only
+in Central Front and trusted consumer validators, never individual nodes.
