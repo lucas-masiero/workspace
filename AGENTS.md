@@ -23,7 +23,9 @@ This directory is a **routing index for multiple independent Git repositories**,
 ## Architectural rules
 
 - **Cohesian `core`** owns the organization's foundational principles.
-- **Cohesian `essays` and `tools`** own their respective works. Individual works expose a lightweight `front` (presentation metadata such as title, description, and cover link) consumed by **Cohesian `site`**. The implementation/format of `front` is defined by the owning repository, not this index.
+- **Cohesian `arch`** owns the organization architecture and workflows.
+- **Cohesian `front`** owns the central tool/essay presentation catalog and schemas. Site consumes this registry and Core; it no longer imports individual works’ front folders. Read Front’s own AGENTS.md before adding instances or assets.
+- **Cohesian `essays` and `tools`** are namespace containers of independent implementation/authoring repositories. They remain factual sources for the presentations; preserve their histories and local work.
 - **Cohesian `site`** publishes the organization catalog and exposes a smaller Cohesian presentation/card that **Profile `portfolio`** consumes.
 - **Profile `resume`** owns structured personal and career data; its `resume.json` conforms to a schema used by **`resumy`** to generate a formatted `resume.pdf`.
 - **Profile `portfolio`** presents personal data from `Profile/resume` and the Cohesian presentation from `Cohesian/site`; do not duplicate either source of truth without cause.

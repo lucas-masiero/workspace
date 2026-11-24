@@ -4,7 +4,7 @@ This repository is the **index and root of a local tree of independent Git repos
 
 The three top-level project families are:
 
-- **`Cohesian/`** — the Cohesian organization: its principles (`core`), public site (`site`), books/research (`essays`), and software (`tools`).
+- **`Cohesian/`** — the Cohesian organization: its architecture (`arch`), principles (`core`), central presentation catalog (`front`), public site (`site`), books/research (`essays`), and software (`tools`).
 - **`Profile/`** — personal resume data and portfolio
 - **`Projects/`** — personal projects
 
@@ -50,3 +50,12 @@ git -C ~/Workspace/Cohesian/tools/resumy status
 ```
 
 Do not confuse the index's Git repository with any repository under `Cohesian/` or `Profile/`.
+
+## Cohesian content publishing
+
+[Cohesian/arch](Cohesian/arch/README.md) documents the architecture.
+[Cohesian/front](Cohesian/front/README.md) owns shared tool/essay schemas and
+instance.json + assets entries. After validating and pushing Front, run
+`npm run fetch` and `npm run build` inside Cohesian/site. Its build uses a
+committed snapshot, so source credentials are needed only for fetch.
+Workspace-level add-tool/add-essay functions are a future step.

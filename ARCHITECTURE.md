@@ -1,127 +1,107 @@
 # Workspace Architecture
 
-## 1. Purpose and boundaries
+Workspace is an index of independent repositories, with three local families:
+Cohesian, Profile and Projects. Its own Git history owns this documentation,
+repositories.json and bootstrap scripts. It ignores all nested project trees;
+there are no Git submodules and no shared application build.
 
-`Workspace/` is the **root of a tree of independent Git repositories**. Its own Git history contains only the index: `README.md`, `AGENTS.md`, `ARCHITECTURE.md`, `repositories.json`, `.gitignore`, and its two scripts.
+## Routing
 
-`Cohesian/`, `Profile/`, and `Projects/` are **local containers**, ignored completely by the index Git repository. Their contents are standalone repositories with their own remotes, branches, and histories. The index does not use Git submodules or try to coordinate commits across projects.
+repositories.json is the source of truth for exact local-path/GitHub mappings.
+Registered checkouts may be absent: bootstrap clones missing repos, preserves
+existing directories and never resets or pulls. Existing source repositories
+are retained when their implementations have been reused in a newer tool.
 
-## 2. Full repository tree
+| Local path | GitHub repository |
+|---|---|
+| `Cohesian/core` | `cohesian/core` |
+| `Cohesian/site` | `cohesian/site` |
+| `Cohesian/essays/bookly-up` | `cohesian-essays/bookly-up` |
+| `Cohesian/essays/composition-in-go` | `cohesian-essays/composition-in-go` |
+| `Cohesian/essays/intro-to-golang` | `cohesian-essays/intro-to-golang` |
+| `Cohesian/essays/research` | `cohesian/research` |
+| `Cohesian/tools/devky` | `cohesian-tools/devky` |
+| `Cohesian/tools/josly` | `cohesian-tools/josly` |
+| `Cohesian/tools/k-graph` | `cohesian-tools/k-graph` |
+| `Cohesian/tools/loci` | `cohesian-tools/loci` |
+| `Cohesian/tools/optional` | `cohesian-tools/optional` |
+| `Cohesian/tools/resumy` | `cohesian-tools/resumy` |
+| `Cohesian/tools/tether` | `cohesian-tools/tether` |
+| `Profile/leetcode` | `lucas-masiero/leetcode` |
+| `Profile/pj-homesolution` | `lucas-masiero/pj-homesolution` |
+| `Profile/portfolio` | `lucas-masiero/portfolio` |
+| `Profile/resume` | `lucas-masiero/resume` |
+| `Projects/bookly-up/auth` | `bookly-up/auth` |
+| `Projects/bookly-up/booking` | `bookly-up/booking` |
+| `Projects/bookly-up/payment` | `bookly-up/payment` |
+| `Cohesian/tools/typy` | `cohesian-tools/typy` |
+| `Cohesian/arch` | `cohesian/arch` |
+| `Cohesian/front` | `cohesian/front` |
 
-The comments show each project's exact `GitHub owner/repository` mapping. Directory names reflect local organization, not necessarily GitHub ownership.
+## Cohesian
 
-```text
-Workspace/                               # root index repository (not a project monorepo)
-├── .gitignore                           # ignores /Cohesian/ and /Profile/
-├── AGENTS.md                            # agent entrypoint
-├── ARCHITECTURE.md                      # human-readable structure and relationships
-├── README.md                            # human entrypoint
-├── repositories.json                    # machine-readable repo routing map
-├── scripts/
-│   ├── setup-termux.sh                  # Termux packages + GitHub authentication
-│   └── bootstrap.sh                     # create directories + clone missing repos
-├── Cohesian/                            # IGNORED by root Git
-│   ├── core/                            # cohesian/core
-│   ├── site/                            # cohesian/site
-│   ├── essays/
-│   │   ├── bookly-up/                   # cohesian-essays/bookly-up
-│   │   ├── composition-in-go/           # cohesian-essays/composition-in-go
-│   │   ├── intro-to-golang/             # cohesian-essays/intro-to-golang
-│   │   └── research/                    # cohesian/research
-│   └── tools/
-│       ├── devky/                       # cohesian-tools/devky
-│       ├── josly/                       # cohesian-tools/josly
-│       ├── k-graph/                     # cohesian-tools/k-graph
-│       ├── loci/                        # cohesian-tools/loci
-│       ├── optional/                    # cohesian-tools/optional
-│       ├── resumy/                      # cohesian-tools/resumy
-│       └── tether/                      # cohesian-tools/tether
-├── Profile/                             # IGNORED by root Git
-│   ├── leetcode/                        # lucas-masiero/leetcode
-│   ├── pj-homesolution/                 # lucas-masiero/pj-homesolution
-│   ├── portfolio/                       # lucas-masiero/portfolio
-│   └── resume/                          # lucas-masiero/resume
-└── Projects/                            # IGNORED by root Git
-    └── bookly-up/
-        ├── auth/                        # bookly-up/auth
-        ├── booking/                     # bookly-up/booking
-        └── payment/                     # bookly-up/payment
-```
+The organization's repositories are **arch**, **core**, **front** and **site**.
+`Cohesian/tools/` and `Cohesian/essays/` are local namespace containers for
+independent repos; their GitHub namespaces are cohesian-tools and
+cohesian-essays. Research retains its existing cohesian/research mapping.
 
-**Total: 20 project repositories** — 13 under `Cohesian/`, 4 under `Profile/`, and 3 under `Projects/`. The index is a separate outer Git repository, if initialized or cloned.
-
-`repositories.json` contains these same path mappings in a machine-readable form and is the authoritative routing list for the bootstrap. The tree above exists to make the architecture easy to inspect without tooling.
-
-## 3. Cohesian: organization and publication
-
-`Cohesian` is the organization. Its work is divided into:
-
-- **`core`** — foundational principles and ideas of the organization.
-- **`site`** — the organization's public frontend, which presents essays and tools.
-- **`essays`** — published written works. `intro-to-golang` is a book introducing Go; `bookly-up` is a book about a booking-system architecture; `composition-in-go` is a KGraph-authored essay in progress about recursive Go processors and combinatorial configuration potential. `research` is a separate research repository under the `cohesian` GitHub namespace.
-- **`tools`** — independently developed tools: `devky`, `josly`, `k-graph`, `loci`, `optional`, `resumy`, and `tether`. In particular, `resumy` is the resume PDF generator. The specific purpose and implementation of the other tools must be learned from their individual repositories.
-
-### The `front` presentation boundary
-
-Each essay and tool acts as a node that exposes a small **`front`**, meaning presentation metadata such as a **title**, **description**, and **cover** (a link to an SVG or PNG). `Cohesian/site` consumes these presentations to display the organization's catalog.
-
-This describes an **information contract**, not a specific framework or transport. The `front` format and access mechanism are determined by the source projects and must be verified in their code.
-
-`Cohesian/site` also exposes a compact Cohesian **presentation/card** used by `Profile/portfolio`. This lets the portfolio present the organization without becoming the owner of Cohesian's content.
-
-## 4. Profile: personal information and presentation
-
-`Profile` is independent of the Cohesian organization even though the portfolio showcases Cohesian work.
-
-- **`resume`** owns the personal/career source data, organized around personal information, education (university and technical skills), work experience, and projects. The projects include home solutions, Cohesian (its two books and tools), and personal LeetCode work.
-- **`portfolio`** is the personal frontend. It consumes personal/resume information from `Profile/resume` and Cohesian-specific information through `Cohesian/site`.
-- **`pj-homesolution`** is a personal project repository.
-- **`leetcode`** contains personal algorithmic problem solutions.
-
-### Resume generation
-
-`Profile/resume` contains `resume.json`, an instance of a resume schema. The `Cohesian/tools/resumy` tool uses that data to produce a structured `resume.pdf`.
-
-The exact schema, command line, and file locations beyond `resume.json` are defined by the respective repositories; this index does not prescribe them.
-
-## 5. Projects: personal projects
-
-`Projects` is a space that contains different projects including from different owners. Its work is divided into:
-
-- **`bookly-up`** is a project for booking it contains different repository modules:
-- **auth** an authentication module
-- **booking** a booking system module such as reservations
-- **payment** a payment module
-
-## 6. Conceptual information flow
+- **arch** owns the full organization architecture and operating workflows.
+- **core** owns accepted principles/identity and its versioned JSON export.
+- **front** owns one central catalog: tools/schema.json with tools/<slug>/
+  instance.json and assets/, and essays/schema.json with essays/<slug>/
+  instance.json and assets/. Essays declare book or paper.
+- **site** consumes Core and Front; it owns components, routes and deployment.
 
 ```mermaid
 flowchart LR
-  Principles["Cohesian/core: principles"]
-  Essays["Cohesian/essays: each work's front"]
-  Tools["Cohesian/tools: each tool's front"]
-  CohSite["Cohesian/site: catalog + Cohesian card"]
-  Resume["Profile/resume: resume.json + personal data"]
-  Resumy["Cohesian/tools/resumy"]
-  PDF["resume.pdf"]
-  Portfolio["Profile/portfolio"]
-
-  Essays -->|presentation metadata| CohSite
-  Tools -->|presentation metadata| CohSite
-  CohSite -->|Cohesian card / presentation| Portfolio
-  Resume -->|personal profile data| Portfolio
-  Resume -->|resume.json| Resumy
-  Resumy -->|generates| PDF
+  Core["Cohesian/core · principles.json"] --> Site["Cohesian/site · fetched snapshots"]
+  Front["Cohesian/front · tools + essays"] --> Site
+  Site --> Build["npm run build · static website"]
+  Resume["Profile/resume · personal data + CV"] --> Portfolio["Profile/portfolio"]
+  Site -->|"Cohesian project-card presentation"| Portfolio
 ```
 
-`core` is shown as a foundation of the organization; no specific runtime dependency between `core` and the site is assumed.
+Front replaces the former per-project front-import arrangement for Site's
+catalog. Individual implementations/works remain the factual references;
+public metadata is deliberately authored once in Front. The existing Site
+project-card export remains separate for Resume and Portfolio.
 
-## 7. Operational model
+See [Cohesian Arch](Cohesian/arch/README.md) for complete contracts, boundaries,
+source acquisition, validation and publication workflows. This index does not
+redefine those application contracts.
 
-1. Clone or unpack the **index repository** into `Workspace/`. Its three project-family directories may not yet exist.
-2. On Termux, run `scripts/setup-termux.sh` to install the packages and configure GitHub SSH / CLI authentication; **no repositories are cloned by this script**.
-3. Run `scripts/bootstrap.sh` to read `repositories.json`, create directory parents, and clone **only missing project repositories** over SSH.
-4. The bootstrap treats existing valid repositories as complete, regardless of whether they are current. It does not `fetch`, `pull`, `reset`, or delete local data.
-5. Use Git separately inside each project. The root index Git only versions the map, docs, and scripts; it ignores `Cohesian/`, `Profile/`, and `Projects/` entirely.
+## Daily catalog update
 
-This is an index and bootstrap arrangement, **not** a monorepo, package manager, deployment system, or automatic multi-repository synchronization tool.
+Add a tool or essay instance and its assets in Cohesian/front, run its checks,
+review and push. Then, from Cohesian/site:
+
+```sh
+npm run fetch
+npm run build
+```
+
+For unpublished sibling content use `npm run fetch -- --local`. Fetch reads
+only the central Front and Core repos. Build/dev use committed snapshots and
+need no source repo credentials. New folders are discovered automatically;
+new unplaced essays get a default shelf. Review/test and commit/push Site to
+publish through its existing deployment.
+
+## Profile and Projects
+
+Resume owns personal/career data; Resumy generates its PDF and matching JSON
+snapshot. Portfolio consumes Resume and Site's Cohesian presentation. Typy
+remains the Go toolbox for ptr, errlay, opt and opt/nullable; the original
+Optional repository is independently registered and is not implicitly retired.
+Projects remains an independent family for Bookly auth/booking/payment modules.
+
+## Index operations
+
+Read README.md and AGENTS.md before routing work. `scripts/setup-termux.sh`
+configures the environment; `scripts/bootstrap.sh` materializes registered
+repositories. Bootstrap supports Cohesian, Profile and Projects and leaves
+existing work alone. Git actions are per-repository; pushing this root does
+not push nested projects.
+
+A future functions.json could define add-tool and add-essay operations with
+namespace checks, central Front authoring, Site refresh and index updates.
+Those functions are a planned interface, not implemented commands today.
