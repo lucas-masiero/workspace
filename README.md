@@ -4,11 +4,13 @@ This repository is the **index and root of a local tree of independent Git repos
 
 The three top-level project families are:
 
-- **`Cohesian/`** — the Cohesian organization: its architecture (`arch`), principles (`core`), central presentation catalog (`front`), public site (`site`), books/research (`essays`), and software (`tools`).
-- **`Profile/`** — personal resume data and portfolio
-- **`Projects/`** — personal projects
+- **`organization/`** — `cohesian/{arch,core,site}`, `cohesian-tools/{front,site,tools}` and `cohesian-essays/{front,site,essays}`.
+- **`personal/`** — Resume, Portfolio and personal repositories (`repositories/`).
+- **`projects/`** — independent project namespaces such as Bookly Up.
 
-The `Cohesian/`, `Profile/`, and `Projects/` directories are deliberately ignored by this repository's `.gitignore`. They are populated locally by cloning independent repositories. They are **not** Git submodules, and the index does not track their content.
+These directories are ignored by the root Git repository. Their leaves are
+independent checkouts, not submodules. Namespace/container directories are not
+repositories themselves.
 
 ## Where to look
 
@@ -101,21 +103,26 @@ permanently clears saved trash contents. These operations never commit or push.
 Running `git status` from `~/Workspace` inspects **only the index**. To inspect a project, enter that project or use `git -C`, for example:
 
 ```bash
-git -C ~/Workspace/Cohesian/tools/resumy status
+git -C ~/Workspace/organization/cohesian-tools/tools/resumy status
 ```
 
-Do not confuse the index's Git repository with any repository under `Cohesian/` or `Profile/`.
+Do not confuse the index's Git repository with any repository under `organization/`, `personal/` or `projects/`.
 
 ## Cohesian content publishing
 
-[Cohesian/arch](Cohesian/arch/README.md) documents the architecture.
-[Cohesian/front](Cohesian/front/README.md) owns shared tool/essay schemas and
-instance.json + assets entries. After validating and pushing Front, run
-`npm run fetch` and `npm run build` inside Cohesian/site. Its build uses a
-committed snapshot, so source credentials are needed only for fetch.
-Workspace-level add-tool/add-essay functions are a future step.
+[organization/cohesian/arch](organization/cohesian/arch/README.md) documents
+ownership and publication formats. The main Site consumes only Core and links
+to `tools.cohesian.org` and `essays.cohesian.org`.
 
-Presentation belongs to consumers: Site owns the Core view; Portfolio owns
-Resume and Cohesian views. Both consumers use fetched/ and the same fetch/build
-commands. Source tools, essays, Resume and Site expose no front packages.
-See Cohesian/arch/README.md for the updated data boundaries.
+Each domain has its own Front catalog and Astro Site. Author an entry in
+`organization/cohesian-tools/front` or `organization/cohesian-essays/front`,
+validate and push it, then run `npm run fetch` and `npm run build` inside that
+domain's Site. `fetch -- --local` previews sibling edits. Builds use committed
+`fetched/` snapshots and need no source credentials.
+
+Individual tools and essays have no presentation packages. Core stays agnostic;
+its visual adaptation belongs to the gateway. Portfolio consumes native Resume
+and gateway settings/assets/Core data, keeping its own presentation adapters.
+The former combined `cohesian/front` is an archived compatibility source, not
+part of the active local index. Workspace-level add-tool/add-essay functions
+remain a future step.

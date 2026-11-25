@@ -39,7 +39,7 @@ class GitTests(unittest.TestCase):
         self.base = Path(self.temporary.name).resolve()
         self.root = self.base / "Workspace"
         self.root.mkdir()
-        self.repo = Repository("Cohesian/site", "example/site")
+        self.repo = Repository("organization/cohesian/site", "example/site")
         self.local = self.root / self.repo.path
         self.local.mkdir(parents=True)
         self.remote = self.base / "remote.git"
@@ -114,7 +114,7 @@ class GitTests(unittest.TestCase):
         self.assertIn("Missing refs/remotes/origin/main", status(self.root, self.repo).detail)
 
     def test_missing_checkout_is_skipped_without_creating_it(self):
-        absent = Repository("Cohesian/tools/missing", "example/missing")
+        absent = Repository("organization/cohesian-tools/tools/missing", "example/missing")
         self.assertEqual(status(self.root, absent).symbol, "⚪")
         self.assertEqual(fetch(self.root, absent).symbol, "⚪")
         self.assertFalse((self.root / absent.path).exists())
@@ -123,14 +123,14 @@ class GitTests(unittest.TestCase):
         run_git(self.local, "remote", "set-url", "origin", "git@github.com:other/repo.git")
         self.assertTrue(fetch(self.root, self.repo).failed)
         self.assertIn("origin does not match", status(self.root, self.repo).detail)
-        linked = self.root / "Profile/linked"
+        linked = self.root / "personal/linked"
         linked.parent.mkdir()
         linked.symlink_to(self.local, target_is_directory=True)
-        self.assertIn("symlink", fetch(self.root, Repository("Profile/linked", "example/site")).detail)
+        self.assertIn("symlink", fetch(self.root, Repository("personal/linked", "example/site")).detail)
         run_git(self.root, "init", "-q")
-        empty = self.root / "Projects/plain"
+        empty = self.root / "projects/plain"
         empty.mkdir(parents=True)
-        self.assertIn("standalone", status(self.root, Repository("Projects/plain", "example/plain")).detail)
+        self.assertIn("standalone", status(self.root, Repository("projects/plain", "example/plain")).detail)
 
     def test_fetch_failure_is_visible_without_modifying_main(self):
         shutil.rmtree(self.remote)
@@ -146,9 +146,9 @@ class IndexTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name).resolve()
         self.entries = [
-            {"path": "Cohesian/site", "github": "cohesian/site"},
-            {"path": "Cohesian/tools/tool", "github": "cohesian-tools/tool"},
-            {"path": "Profile/resume", "github": "person/resume"},
+            {"path": "organization/cohesian/site", "github": "cohesian/site"},
+            {"path": "organization/cohesian-tools/tools/tool", "github": "cohesian-tools/tool"},
+            {"path": "personal/resume", "github": "person/resume"},
         ]
         self.write(self.entries)
 
@@ -165,7 +165,7 @@ class IndexTests(unittest.TestCase):
         repositories = load_repositories(self.root)
         self.assertEqual(len(select(repositories, "all")), 3)
         self.assertEqual([r.github for r in select(repositories, "COHESIAN")], ["cohesian/site"])
-        self.assertEqual(select(repositories, "cohesian-tools/tool")[0].path, "Cohesian/tools/tool")
+        self.assertEqual(select(repositories, "cohesian-tools/tool")[0].path, "organization/cohesian-tools/tools/tool")
         with self.assertRaises(WorkspaceError):
             select(repositories, "../unknown")
         with self.assertRaises(WorkspaceError):
@@ -178,7 +178,7 @@ class IndexTests(unittest.TestCase):
         full = render_tree("Workspace", repos, results)
         self.assertIn("└── tool [cohesian-tools/tool]", full)
         collapsed = render_tree("Workspace", repos, results, depth=1)
-        self.assertIn("Cohesian/ (2 repos)  ✅ 1  🔼 1", collapsed)
+        self.assertIn("organization/ (2 repos)  ✅ 1  🔼 1", collapsed)
         self.assertNotIn("[cohesian/site]", collapsed)
         self.assertEqual(self.invoke("list", "person")[0], 0)
 
@@ -202,9 +202,9 @@ class IndexTests(unittest.TestCase):
     def test_invalid_inventory_rejects_all_before_any_operation(self):
         cases = [
             [*self.entries, self.entries[0]],
-            [{"path": "Cohesian/../outside", "github": "cohesian/site"}],
-            [*self.entries, {"path": "Cohesian/site/child", "github": "person/child"}],
-            [{"path": "Cohesian/site", "github": "https://github.com/cohesian/site"}],
+            [{"path": "organization/cohesian/../outside", "github": "cohesian/site"}],
+            [*self.entries, {"path": "organization/cohesian/site/child", "github": "person/child"}],
+            [{"path": "organization/cohesian/site", "github": "https://github.com/cohesian/site"}],
         ]
         with patch("workspace_cli.app.fetch") as operation:
             for entries in cases:

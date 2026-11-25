@@ -95,8 +95,8 @@ also return GitHub CLI's authentication exit code.
 ## Check the index against the workdir
 
 `workspace repo check` is local and read-only. It compares registered paths
-and GitHub origins, then discovers unregistered repositories under Cohesian/,
-Profile/ and Projects/. It does not inspect Git commit synchronization; use
+and GitHub origins, then discovers unregistered repositories under organization/,
+personal/ and projects/. It does not inspect Git commit synchronization; use
 status for that.
 
 - ✅ The registered path contains a standalone checkout with the expected origin.
@@ -148,7 +148,7 @@ Purge preserves the complete checkout, Git history and uncommitted files at:
 .trash/
 ├── .workspace-trash.json
 └── <timestamp-and-id>/
-    └── Profile/unused-project/
+    └── personal/unused-project/
         ├── .git/
         └── ...
 ```

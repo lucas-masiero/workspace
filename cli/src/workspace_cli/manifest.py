@@ -5,7 +5,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 
-FAMILIES = ("Cohesian", "Profile", "Projects")
+FAMILIES = ("organization", "personal", "projects")
 
 
 class WorkspaceError(Exception):

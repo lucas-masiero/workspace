@@ -28,14 +28,14 @@ class ReconciliationTests(unittest.TestCase):
         self.initial = {
             "version": 1, "note": "preserve custom fields",
             "repositories": [
-                {"path": "Cohesian/core", "github": "cohesian/core", "role": "Reference"},
-                {"path": "Cohesian/tools/absent", "github": "cohesian-tools/absent"},
+                {"path": "organization/cohesian/core", "github": "cohesian/core", "role": "Reference"},
+                {"path": "organization/cohesian-tools/tools/absent", "github": "cohesian-tools/absent"},
             ],
         }
         self.manifest.write_text(json.dumps(self.initial, indent=2) + "\n")
         self.architecture.write_text(f"# Architecture\n\n{TABLE_START}\nold table\n{TABLE_END}\n\nKeep this prose.\n")
-        self.core = self.make_repo("Cohesian/core", "cohesian/core")
-        self.new = self.make_repo("Profile/new-tool", "person/new-tool")
+        self.core = self.make_repo("organization/cohesian/core", "cohesian/core")
+        self.new = self.make_repo("personal/new-tool", "person/new-tool")
 
     def make_repo(self, relative, github):
         directory = self.root / relative
@@ -70,13 +70,13 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual(self.invoke("check", "person")[0], 1)
 
     def test_discovery_stops_at_git_boundaries_and_ignores_symlinks(self):
-        self.make_repo("Cohesian/core/dependencies/nested", "person/nested")
-        (self.root / "Profile/alias").symlink_to(self.new, target_is_directory=True)
+        self.make_repo("organization/cohesian/core/dependencies/nested", "person/nested")
+        (self.root / "personal/alias").symlink_to(self.new, target_is_directory=True)
         inventory = inspect(self.root, load_repositories(self.root))
-        self.assertEqual({e.repo.path for e in inventory}, {"Cohesian/core", "Cohesian/tools/absent", "Profile/new-tool"})
+        self.assertEqual({e.repo.path for e in inventory}, {"organization/cohesian/core", "organization/cohesian-tools/tools/absent", "personal/new-tool"})
         code, output, _ = self.invoke("check", "person", "-l", "1")
         self.assertEqual(code, 1)
-        self.assertIn("Profile/ (1 repo)  ⚠️ 1", output)
+        self.assertIn("personal/ (1 repo)  ⚠️ 1", output)
         self.assertNotIn("[person/new-tool]", output)
 
     def test_index_remove_updates_index_and_routing_table_only(self):
@@ -88,7 +88,7 @@ class ReconciliationTests(unittest.TestCase):
         data = json.loads(self.manifest.read_bytes())
         self.assertEqual(data["note"], self.initial["note"])
         self.assertEqual(data["repositories"], self.initial["repositories"][:1])
-        self.assertIn("| `Cohesian/core` | `cohesian/core` |", self.architecture.read_text())
+        self.assertIn("| `organization/cohesian/core` | `cohesian/core` |", self.architecture.read_text())
         self.assertIn("Keep this prose.", self.architecture.read_text())
         self.assertNotIn("absent", self.architecture.read_text())
         self.assertEqual(run_git(self.core, "rev-parse", "HEAD"), head)
@@ -100,7 +100,7 @@ class ReconciliationTests(unittest.TestCase):
         # Exercise the actual clone transport without contacting GitHub.
         with patch.dict(os.environ, {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": f"url.{self.core}.insteadOf", "GIT_CONFIG_VALUE_0": "git@github.com:cohesian-tools/absent.git"}):
             repos, results = synchronize(self.root, "workdir", "clone")
-        target = self.root / "Cohesian/tools/absent"
+        target = self.root / "organization/cohesian-tools/tools/absent"
         self.assertEqual(repository_name(target), "cohesian-tools/absent")
         self.assertEqual((target / "source.txt").read_bytes(), (self.core / "source.txt").read_bytes())
         self.assertFalse(results[repos[0].path].failed)
@@ -108,32 +108,32 @@ class ReconciliationTests(unittest.TestCase):
         self.assertFalse(list(target.parent.glob(".workspace-clone-*")))
 
     def test_empty_directory_is_missing_and_can_be_cloned(self):
-        target = self.root / "Cohesian/tools/absent"
+        target = self.root / "organization/cohesian-tools/tools/absent"
         target.mkdir(parents=True)
         _, results = synchronize(self.root, "workdir", "clone", clone=self.local_clone)
-        self.assertFalse(results["Cohesian/tools/absent"].failed)
+        self.assertFalse(results["organization/cohesian-tools/tools/absent"].failed)
         self.assertTrue((target / ".git").is_dir())
 
     def test_failed_clone_and_racing_working_files_are_preserved(self):
-        target = self.root / "Cohesian/tools/absent"
+        target = self.root / "organization/cohesian-tools/tools/absent"
         target.mkdir(parents=True)
         def fail(repo, prepared):
             prepared.mkdir()
             (prepared / "partial.txt").write_text("partial clone")
             raise WorkspaceError("Network unavailable")
         _, results = synchronize(self.root, "workdir", "clone", clone=fail)
-        self.assertTrue(results["Cohesian/tools/absent"].failed)
+        self.assertTrue(results["organization/cohesian-tools/tools/absent"].failed)
         self.assertEqual(list(target.iterdir()), [])
         def change(repo, prepared):
             self.local_clone(repo, prepared)
             (target / "local.txt").write_text("concurrent work")
         _, results = synchronize(self.root, "workdir", "clone", clone=change)
-        self.assertTrue(results["Cohesian/tools/absent"].failed)
+        self.assertTrue(results["organization/cohesian-tools/tools/absent"].failed)
         self.assertEqual((target / "local.txt").read_text(), "concurrent work")
         self.assertFalse(list(target.parent.glob(".workspace-clone-*")))
 
     def test_occupied_or_wrong_origin_paths_are_never_purged_or_replaced(self):
-        target = self.root / "Cohesian/tools/absent"
+        target = self.root / "organization/cohesian-tools/tools/absent"
         target.mkdir(parents=True)
         (target / "important.txt").write_text("preserve me")
         run_git(self.core, "remote", "set-url", "origin", "git@github.com:other/core.git")
@@ -152,8 +152,8 @@ class ReconciliationTests(unittest.TestCase):
         repos, results = synchronize(self.root, "index", "add", "person")
         self.assertEqual(len(repos), 1)
         self.assertFalse(results[repos[0].path].failed)
-        self.assertIn({"path": "Profile/new-tool", "github": "person/new-tool"}, json.loads(self.manifest.read_bytes())["repositories"])
-        self.assertIn("| `Profile/new-tool` | `person/new-tool` |", self.architecture.read_text())
+        self.assertIn({"path": "personal/new-tool", "github": "person/new-tool"}, json.loads(self.manifest.read_bytes())["repositories"])
+        self.assertIn("| `personal/new-tool` | `person/new-tool` |", self.architecture.read_text())
         self.assertEqual((run_git(self.new, "status", "--porcelain"), run_git(self.new, "rev-parse", "HEAD")), before)
         before = self.manifest.read_bytes(), self.architecture.read_bytes()
         self.assertEqual(synchronize(self.root, "index", "add", "person"), ([], {}))
@@ -166,7 +166,7 @@ class ReconciliationTests(unittest.TestCase):
         repos, results = synchronize(self.root, "workdir", "purge", "person")
         self.assertFalse(results[repos[0].path].failed)
         self.assertFalse(self.new.exists())
-        saved = list((self.root / ".trash").glob("*/Profile/new-tool"))
+        saved = list((self.root / ".trash").glob("*/personal/new-tool"))
         self.assertEqual(len(saved), 1)
         self.assertEqual((saved[0] / "uncommitted.txt").read_text(), "unfinished")
         self.assertEqual(run_git(saved[0], "rev-parse", "HEAD"), head)
@@ -181,13 +181,13 @@ class ReconciliationTests(unittest.TestCase):
             synchronize(self.root, "index", "add")
         self.assertEqual((self.manifest.read_bytes(), self.architecture.read_bytes()), before)
         run_git(self.new, "remote", "set-url", "origin", "git@github.com:person/new-tool.git")
-        self.make_repo("Cohesian/tools", "person/container")
+        self.make_repo("organization/cohesian-tools/tools", "person/container")
         with self.assertRaisesRegex(WorkspaceError, "Nested"):
             synchronize(self.root, "index", "add")
         self.assertEqual((self.manifest.read_bytes(), self.architecture.read_bytes()), before)
         _, results = synchronize(self.root, "workdir", "purge", "person/container")
-        self.assertTrue(results["Cohesian/tools"].failed)
-        self.assertTrue((self.root / "Cohesian/tools/.git").is_dir())
+        self.assertTrue(results["organization/cohesian-tools/tools"].failed)
+        self.assertTrue((self.root / "organization/cohesian-tools/tools/.git").is_dir())
 
     def test_doc_write_failure_rolls_back_manifest_without_touching_sources(self):
         before = self.manifest.read_bytes(), self.architecture.read_bytes()
@@ -219,7 +219,7 @@ class ReconciliationTests(unittest.TestCase):
         self.assertTrue(list(self.root.glob(".workspace-sync-*/backup-0")))
 
     def test_linked_worktrees_and_symlinked_trash_are_preserved(self):
-        worktree = self.root / "Profile/linked"
+        worktree = self.root / "personal/linked"
         run_git(self.new, "worktree", "add", "-qb", "feature", str(worktree))
         _, results = synchronize(self.root, "workdir", "purge", "person")
         self.assertTrue(all(result.failed for result in results.values()))
@@ -230,7 +230,7 @@ class ReconciliationTests(unittest.TestCase):
         external.mkdir()
         (self.root / ".trash").symlink_to(external, target_is_directory=True)
         _, results = synchronize(self.root, "workdir", "purge", "person")
-        self.assertTrue(results["Profile/new-tool"].failed)
+        self.assertTrue(results["personal/new-tool"].failed)
         self.assertTrue(self.new.is_dir())
         self.assertEqual(list(external.iterdir()), [])
 

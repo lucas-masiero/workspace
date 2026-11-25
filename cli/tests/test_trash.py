@@ -23,7 +23,7 @@ class TrashTests(unittest.TestCase):
         trash = initialize(self.root)
         self.assertEqual(trash, self.root / ".trash")
         self.assertTrue((trash / MARKER).is_file())
-        saved = trash / "saved/Cohesian/tool/uncommitted.txt"
+        saved = trash / "saved/organization/cohesian/tool/uncommitted.txt"
         saved.parent.mkdir(parents=True)
         saved.write_text("unfinished work")
         initialize(self.root)
@@ -31,7 +31,7 @@ class TrashTests(unittest.TestCase):
 
     def test_empty_deletes_saved_tree_and_retains_initialized_trash(self):
         trash = initialize(self.root)
-        saved = trash / "batch/Profile/project/file.txt"
+        saved = trash / "batch/personal/project/file.txt"
         saved.parent.mkdir(parents=True)
         saved.write_text("explicitly discarded")
         outside = self.base / "outside"

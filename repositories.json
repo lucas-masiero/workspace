@@ -2,123 +2,138 @@
   "version": 1,
   "repositories": [
     {
-      "path": "Cohesian/core",
-      "github": "cohesian/core",
-      "role": "Cohesian's principles and foundational ideas"
-    },
-    {
-      "path": "Cohesian/site",
-      "github": "cohesian/site",
-      "role": "Cohesian's public website and catalog of its work"
-    },
-    {
-      "path": "Cohesian/essays/bookly-up",
+      "path": "organization/cohesian-essays/essays/bookly-up",
       "github": "cohesian-essays/bookly-up",
       "role": "Book about a booking-system architecture"
     },
     {
-      "path": "Cohesian/essays/composition-in-go",
+      "path": "organization/cohesian-essays/essays/composition-in-go",
       "github": "cohesian-essays/composition-in-go",
       "role": "KGraph essay on recursive Go processor composition and combinatorial configuration potential"
     },
     {
-      "path": "Cohesian/essays/intro-to-golang",
+      "path": "organization/cohesian-essays/essays/dimensional-invariance",
+      "github": "cohesian-essays/dimensional-invariance"
+    },
+    {
+      "path": "organization/cohesian-essays/essays/intro-to-golang",
       "github": "cohesian-essays/intro-to-golang",
       "role": "Book introducing Go"
     },
     {
-      "path": "Cohesian/essays/research",
+      "path": "organization/cohesian-essays/essays/research",
       "github": "cohesian/research",
       "role": "Research repository"
     },
     {
-      "path": "Cohesian/tools/devky",
+      "path": "organization/cohesian-essays/front",
+      "github": "cohesian-essays/front",
+      "role": "Schema-validated essays presentation catalog and publication assets"
+    },
+    {
+      "path": "organization/cohesian-essays/site",
+      "github": "cohesian-essays/site",
+      "role": "Independent Astro essays website"
+    },
+    {
+      "path": "organization/cohesian-tools/front",
+      "github": "cohesian-tools/front",
+      "role": "Schema-validated tools presentation catalog and publication assets"
+    },
+    {
+      "path": "organization/cohesian-tools/site",
+      "github": "cohesian-tools/site",
+      "role": "Independent Astro tools website"
+    },
+    {
+      "path": "organization/cohesian-tools/tools/devky",
       "github": "cohesian-tools/devky",
       "role": "Cohesian tool"
     },
     {
-      "path": "Cohesian/tools/josly",
+      "path": "organization/cohesian-tools/tools/josly",
       "github": "cohesian-tools/josly",
       "role": "Cohesian tool"
     },
     {
-      "path": "Cohesian/tools/k-graph",
+      "path": "organization/cohesian-tools/tools/k-graph",
       "github": "cohesian-tools/k-graph",
       "role": "Cohesian tool"
     },
     {
-      "path": "Cohesian/tools/loci",
+      "path": "organization/cohesian-tools/tools/loci",
       "github": "cohesian-tools/loci",
       "role": "Cohesian tool"
     },
     {
-      "path": "Cohesian/tools/optional",
+      "path": "organization/cohesian-tools/tools/optional",
       "github": "cohesian-tools/optional",
       "role": "Cohesian tool"
     },
     {
-      "path": "Cohesian/tools/resumy",
+      "path": "organization/cohesian-tools/tools/resumy",
       "github": "cohesian-tools/resumy",
       "role": "Generates a formatted resume PDF from resume data"
     },
     {
-      "path": "Cohesian/tools/tether",
+      "path": "organization/cohesian-tools/tools/tether",
       "github": "cohesian-tools/tether",
       "role": "Cohesian tool"
     },
     {
-      "path": "Profile/leetcode",
-      "github": "lucas-masiero/leetcode",
-      "role": "Personal algorithm solutions"
-    },
-    {
-      "path": "Profile/pj-homesolution",
-      "github": "lucas-masiero/pj-homesolution",
-      "role": "Personal project"
-    },
-    {
-      "path": "Profile/portfolio",
-      "github": "lucas-masiero/portfolio",
-      "role": "Personal portfolio website"
-    },
-    {
-      "path": "Profile/resume",
-      "github": "lucas-masiero/resume",
-      "role": "Structured resume and personal profile data"
-    },
-    {
-      "path": "Projects/bookly-up/auth",
-      "github": "bookly-up/auth",
-      "role": "Bookly auth module for booking system"
-    },
-    {
-      "path": "Projects/bookly-up/booking",
-      "github": "bookly-up/booking",
-      "role": "Bookly booking module for booking system"
-    },
-    {
-      "path": "Projects/bookly-up/payment",
-      "github": "bookly-up/payment",
-      "role": "Bookly payment module for booking system"
-    },
-    {
-      "path": "Cohesian/tools/typy",
+      "path": "organization/cohesian-tools/tools/typy",
       "github": "cohesian-tools/typy",
       "role": "General-purpose Go toolbox for pointers, layered errors, and optional values"
     },
     {
-      "path": "Cohesian/arch",
+      "path": "organization/cohesian/arch",
       "github": "cohesian/arch",
       "role": "Organization architecture, ownership and publishing workflows"
     },
     {
-      "path": "Cohesian/front",
-      "github": "cohesian/front",
-      "role": "Central schema-validated tool and essay presentations"
+      "path": "organization/cohesian/core",
+      "github": "cohesian/core",
+      "role": "Cohesian's principles and foundational ideas"
     },
     {
-      "path": "Cohesian/essays/dimensional-invariance",
-      "github": "cohesian-essays/dimensional-invariance"
+      "path": "organization/cohesian/site",
+      "github": "cohesian/site",
+      "role": "Core gateway and navigation to independent Tools and Essays sites"
+    },
+    {
+      "path": "personal/portfolio",
+      "github": "lucas-masiero/portfolio",
+      "role": "Personal portfolio website"
+    },
+    {
+      "path": "personal/repositories/leetcode",
+      "github": "lucas-masiero/leetcode",
+      "role": "Personal algorithm solutions"
+    },
+    {
+      "path": "personal/repositories/pj-homesolution",
+      "github": "lucas-masiero/pj-homesolution",
+      "role": "Personal project"
+    },
+    {
+      "path": "personal/resume",
+      "github": "lucas-masiero/resume",
+      "role": "Structured resume and personal profile data"
+    },
+    {
+      "path": "projects/bookly-up/auth",
+      "github": "bookly-up/auth",
+      "role": "Bookly auth module for booking system"
+    },
+    {
+      "path": "projects/bookly-up/booking",
+      "github": "bookly-up/booking",
+      "role": "Bookly booking module for booking system"
+    },
+    {
+      "path": "projects/bookly-up/payment",
+      "github": "bookly-up/payment",
+      "role": "Bookly payment module for booking system"
     }
   ]
 }

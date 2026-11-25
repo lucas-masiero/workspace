@@ -39,7 +39,7 @@ class SeedTests(unittest.TestCase):
         self.assertEqual(lines[0], "pkg update -y")
         self.assertIn("python-ensurepip-wheels", lines[1])
         self.assertEqual(lines[2:], ["install cli", "workspace repo login"])
-        self.assertFalse((self.root / "Cohesian").exists())
+        self.assertFalse((self.root / "organization").exists())
         self.assertIn("bootstrap.sh", result.stdout)
 
     def test_termux_package_failure_stops_before_cli_or_login(self):
