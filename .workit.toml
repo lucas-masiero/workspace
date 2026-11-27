@@ -1,0 +1,187 @@
+version = 1
+protocol = "https"
+exclude = ["scripts", "tests"]
+
+[[nodes]]
+path = "."
+kind = "r"
+
+[[nodes]]
+path = "organization"
+kind = "n"
+
+[[nodes]]
+path = "personal"
+kind = "n"
+
+[[nodes]]
+path = "projects"
+kind = "n"
+
+[[nodes]]
+path = "organization/cohesian"
+kind = "n"
+
+[[nodes]]
+path = "organization/cohesian-essays"
+kind = "n"
+
+[[nodes]]
+path = "organization/cohesian-tools"
+kind = "n"
+
+[[nodes]]
+path = "personal/portfolio"
+kind = "w"
+repository = "lucas-masiero/portfolio"
+
+[[nodes]]
+path = "personal/repositories"
+kind = "n"
+
+[[nodes]]
+path = "personal/resume"
+kind = "w"
+repository = "lucas-masiero/resume"
+
+[[nodes]]
+path = "projects/bookly-up"
+kind = "n"
+
+[[nodes]]
+path = "organization/cohesian-essays/essays"
+kind = "n"
+
+[[nodes]]
+path = "organization/cohesian-essays/front"
+kind = "w"
+repository = "cohesian-essays/front"
+
+[[nodes]]
+path = "organization/cohesian-essays/site"
+kind = "w"
+repository = "cohesian-essays/site"
+
+[[nodes]]
+path = "organization/cohesian-tools/front"
+kind = "w"
+repository = "cohesian-tools/front"
+
+[[nodes]]
+path = "organization/cohesian-tools/site"
+kind = "w"
+repository = "cohesian-tools/site"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools"
+kind = "n"
+
+[[nodes]]
+path = "organization/cohesian/arch"
+kind = "w"
+repository = "cohesian/arch"
+
+[[nodes]]
+path = "organization/cohesian/core"
+kind = "w"
+repository = "cohesian/core"
+
+[[nodes]]
+path = "organization/cohesian/site"
+kind = "w"
+repository = "cohesian/site"
+
+[[nodes]]
+path = "personal/repositories/leetcode"
+kind = "w"
+repository = "lucas-masiero/leetcode"
+
+[[nodes]]
+path = "personal/repositories/pj-homesolution"
+kind = "w"
+repository = "lucas-masiero/pj-homesolution"
+
+[[nodes]]
+path = "projects/bookly-up/auth"
+kind = "w"
+repository = "bookly-up/auth"
+
+[[nodes]]
+path = "projects/bookly-up/booking"
+kind = "w"
+repository = "bookly-up/booking"
+
+[[nodes]]
+path = "projects/bookly-up/payment"
+kind = "w"
+repository = "bookly-up/payment"
+
+[[nodes]]
+path = "organization/cohesian-essays/essays/bookly-up"
+kind = "w"
+repository = "cohesian-essays/bookly-up"
+
+[[nodes]]
+path = "organization/cohesian-essays/essays/composition-in-go"
+kind = "w"
+repository = "cohesian-essays/composition-in-go"
+
+[[nodes]]
+path = "organization/cohesian-essays/essays/dimensional-invariance"
+kind = "w"
+repository = "cohesian-essays/dimensional-invariance"
+
+[[nodes]]
+path = "organization/cohesian-essays/essays/intro-to-golang"
+kind = "w"
+repository = "cohesian-essays/intro-to-golang"
+
+[[nodes]]
+path = "organization/cohesian-essays/essays/research"
+kind = "w"
+repository = "cohesian/research"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/devky"
+kind = "w"
+repository = "cohesian-tools/devky"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/josly"
+kind = "w"
+repository = "cohesian-tools/josly"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/k-graph"
+kind = "w"
+repository = "cohesian-tools/k-graph"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/loci"
+kind = "w"
+repository = "cohesian-tools/loci"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/optional"
+kind = "w"
+repository = "cohesian-tools/optional"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/resumy"
+kind = "w"
+repository = "cohesian-tools/resumy"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/tether"
+kind = "w"
+repository = "cohesian-tools/tether"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/typy"
+kind = "w"
+repository = "cohesian-tools/typy"
+
+[[nodes]]
+path = "organization/cohesian-tools/tools/workit"
+kind = "w"
+repository = "cohesian-tools/workit"

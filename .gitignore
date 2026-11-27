@@ -16,3 +16,10 @@ __pycache__/
 /.workspace-sync-*/
 /.workspace-sync.lock/
 /.trash/
+
+# Workit runtime state; legacy data stays local and untouched.
+/.void/
+/.workit.lock/
+/.workit-index-*/
+/.workit-clone-*/
+/.migration/python-local/

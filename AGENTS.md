@@ -1,12 +1,12 @@
 # Agent Instructions — Workspace Index
 
-This directory is a **routing index for multiple independent Git repositories**, not a monorepo or a shared application. The root Git repository owns this index's documentation, manifest, setup scripts and Python workspace CLI. `organization/`, `personal/`, and `projects/` are separate local project trees and are ignored by the root `.gitignore`.
+This directory is a **routing index for multiple independent Git repositories**, not a monorepo or a shared application. The root Git repository owns the .workit.toml catalog, documentation and small device setup scripts. The Go CLI lives independently in cohesian-tools/workit. `organization/`, `personal/`, and `projects/` are separate local project trees and are ignored by the root `.gitignore`.
 
 ## Read first
 
 1. Read [`README.md`](README.md) for the purpose and boundaries of this index.
 2. Read [`ARCHITECTURE.md`](ARCHITECTURE.md) to understand the repository tree, ownership, and cross-project data flow.
-3. Consult [`repositories.json`](repositories.json) to resolve a local path to its exact GitHub repository. Treat this file as the source of truth **for path-to-repository mappings**.
+3. Consult [`.workit.toml`](.workit.toml) to resolve a local path to its exact GitHub repository. Treat this file as the source of truth **for path-to-repository mappings**.
 4. When working on a particular project, read that project's own documentation and instructions before changing its files.
 
 ## Routing and scope
@@ -15,7 +15,7 @@ This directory is a **routing index for multiple independent Git repositories**,
 - Work inside the owning repository. Do not treat a root-level `git status`, commit, or push as applying to nested repositories.
 - Do not add nested repositories to the index's Git history or convert them into submodules.
 - Do not create, replace, reset, pull, or push repositories unless the user explicitly asks.
-- Do not assume a missing repository is an error in the index; a checkout can contain only some projects. `scripts/bootstrap.sh` fills in missing clones when requested.
+- Do not assume a missing repository is an error in the index; a checkout can contain only some projects. `workit sync workdir add` fills in missing clones when requested.
 - Preserve existing project work, including uncommitted changes. Do not rewrite files merely to make their contents conform to this index.
 - If a task spans repositories, explain the affected owners and contracts and make only the changes necessary to satisfy the task.
 - If the manifest and the human-oriented documentation disagree about a repository path, use the manifest for routing and flag the inconsistency rather than silently guessing.
@@ -36,29 +36,33 @@ Do **not** infer technical specifics—API routes, file paths, schema names, exp
 
 ## Editing the index itself
 
-Keep `ARCHITECTURE.md` readable for humans and `repositories.json` precise for machines. When adding, removing, or relocating repositories, update both together, and update the root `.gitignore` if a new top-level project family is introduced. Seeds configure Termux/macOS and install the CLI; bootstrap materializes the repository map. Keep those responsibilities separate.
+Keep ARCHITECTURE.md readable for humans and .workit.toml precise for machines.
+When adding/removing/relocating registered nodes, update its routing table too.
+The TOML workstation nodes are the only active path/owner mapping; derive the
+parent namespaces and preserve root/ancestor closure. Do not edit the frozen
+.migration/repositories.v1.json snapshot as if it were an active inventory.
 
-Read cli/README.md before changing the CLI. list/status/fetch use only
-repositories.json for inventory, with all, owner, or owner/name selection.
-All share the local tree and -l display depth.
-Status compares local main with cached origin/main and notes current worktree
-edits without switching branches. Fetch refreshes origin; never automatically
-pull/reset/merge/commit/push. Missing checkouts are normal. login delegates
-interactive authentication to gh/SSH. Keep runtime dependencies in Python's standard library.
-Test CLI changes with PYTHONPATH=cli/src python3 -m unittest discover -s cli/tests.
-Seed scripts target Bash 3.2+ as well as Termux Bash; never upgrade system pip.
+Workit owns command behavior and its own schemas/tests in its source checkout.
+This repository has no Python CLI or duplicate manifest parser. Bash seeds
+install prerequisites only; install-cli.sh delegates to go install and
+bootstrap.sh delegates to Workit. Keep them compatible with Bash 3.2+ and Termux
+pkg. Do not install/upgrade system Python or mutate a developer's shell profile
+while testing scripts. Test with python3 -m unittest discover -s tests, using
+fake package tools and temporary roots only.
 
-repo check is a read-only comparison/discovery under organization/personal/projects;
-stop scanning at Git boundaries and never follow symlinks. workspace sync is
-a separate group: index --add/--remove and workdir --clone/--purge (-p).
-Require one explicit mode per call; no mode is a no-op and there is no all mode.
-Queries remain all, owner, or owner/name, with display-only depth.
-Index mutations update the marked table in ARCHITECTURE.md as well as the JSON.
-Preserve existing fields, files and checkouts; reject conflicting routes/origins.
-Purge moves only unregistered repos to ignored .trash/, preserving their tree,
-Git history and local edits. trash init is idempotent; trash empty explicitly
-permanently clears only initialized Workspace trash. Never empty it incidentally
-while implementing features. Tests use temporary roots and local Git remotes.
+The root exclude list keeps scripts/ and tests/ outside Workit discovery.
+Hidden state and the three ignored source families stay separate from index
+history. Never remove exclusions to make an unexpected sync plan pass.
+Repository scope follows cd/-C and current branches' cached upstreams; fixed-main
+status and owner/name query flags belonged to the retired Python CLI.
+
+Keep existing repositories, edits, .trash/, .venv-cli/ and ignored legacy runtime
+metadata intact. Workit quarantines only explicit removals under .void/ with
+recovery records; it does not adopt or empty the old .trash/. Never run removal,
+prune, clone, fetch, pull, push or cleanup over real checkouts as an implementation
+test. Read-only status and dry-run plans can verify an authorized migration.
+Do not run workit init in this already-indexed workspace. Workit never commits
+or pushes on behalf of the user; run Git independently per owning repository.
 
 All frontend consumers use fetched/ and npm run fetch / npm run build.
 Use --local for unpublished sibling inputs. Keep Core unchanged as a reference

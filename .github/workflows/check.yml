@@ -1,0 +1,18 @@
+name: Workspace catalog and setup
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.x'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s tests
+      - run: go install github.com/cohesian-tools/workit@v0.1.0
+      - run: workit sync workdir add --dry-run

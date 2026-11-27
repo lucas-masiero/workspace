@@ -1,14 +1,15 @@
 # Workspace Architecture
 
 Workspace is an index of independent repositories, with three local families:
-organization, personal and projects. Its own Git history owns this documentation,
-repositories.json, setup scripts and the Python Workspace CLI. It ignores all nested project trees;
+organization, personal and projects. Its own Git history owns .workit.toml, documentation and small setup scripts. The CLI is the independent
+cohesian-tools/workit Go module. It ignores all nested project trees;
 there are no Git submodules and no shared application build.
 
 ## Routing
 
-repositories.json is the source of truth for exact local-path/GitHub mappings.
-Registered checkouts may be absent: bootstrap clones missing repos, preserves
+The workstation nodes in .workit.toml are the source of truth for exact
+local-path/GitHub mappings. Namespace parents are explicit. Registered
+checkouts may be absent: workit sync workdir add clones missing repos, preserves
 existing directories and never resets or pulls. Existing source repositories
 are retained when their implementations have been reused in a newer tool.
 
@@ -32,6 +33,7 @@ are retained when their implementations have been reused in a newer tool.
 | `organization/cohesian-tools/tools/resumy` | `cohesian-tools/resumy` |
 | `organization/cohesian-tools/tools/tether` | `cohesian-tools/tether` |
 | `organization/cohesian-tools/tools/typy` | `cohesian-tools/typy` |
+| `organization/cohesian-tools/tools/workit` | `cohesian-tools/workit` |
 | `organization/cohesian/arch` | `cohesian/arch` |
 | `organization/cohesian/core` | `cohesian/core` |
 | `organization/cohesian/site` | `cohesian/site` |
@@ -93,34 +95,43 @@ sources, PDF/JSON output and Resumy configuration. Neither exposes its own front
 package. K-graph's runtime formats and Resumy's native CV schema are implementation
 features, not catalog exports.
 
-Use Git independently in each repo. The root history owns routing, documentation,
-the CLI and setup/bootstrap scripts. A future functions.json can define
+Use Git independently in each repo. The root history owns routing, documentation
+and small device setup/wrapper scripts. Workit owns the CLI in its independent
+repository. A future functions.json can define
 add-tool/add-essay workflows; it remains a planned interface.
 
-## Workspace CLI and device seeds
+## Workit and device setup
 
-cli/ is an installable Python package (pyproject.toml, src/workspace_cli and
-tests). It belongs to this index repository and reads repositories.json;
-there is no second inventory. repo list/status/fetch
-accept all (default), a GitHub owner, or owner/name and render the local tree.
--l limits display depth with descendant summaries; the query controls operation
-scope. Status compares local main with cached origin/main, alongside working
-tree edits. Fetch updates origin references without touching working files or
-switching branches. repo login delegates device authentication to gh and SSH.
+Workit is the external Go CLI (cohesian-tools/workit v0.1.0). Workspace owns
+only its .workit.toml instance, documentation and small prerequisite scripts.
+The old Python CLI is retired; its source remains in Git history and the old
+27-repository JSON is preserved exactly in .migration/repositories.v1.json.
+It is a historical snapshot, never an active second inventory. Workit is the
+28th registered checkout. Existing paths and GitHub identities are unchanged.
 
-repo check compares registered routes with local origins and discovers new
-independent Git roots within the three project families, stopping at each
-repository boundary. It is read-only. workspace sync operates on a named side:
-index --add/--remove updates the manifest and the marked routing table above;
-workdir --clone/--purge fills missing indexed checkouts or moves unregistered
-ones into .trash/<unique-batch>/<original-path>. No mode means no changes.
-There is no combined all mode. -p aliases --purge; queries/depth work as above.
-trash init creates managed .trash idempotently (purge also does this).
-trash empty permanently clears its saved contents. The CLI never commits or
-pushes index changes. Sync/trash mutations share a workspace-local lock.
+The global tree has r/n/w nodes; grouping follows registered parent paths.
+Workit's root-level exclude = ["scripts", "tests"] keeps this repository's
+management folders outside discovery, registration and quarantine plans.
+Hidden directories are excluded by Workit; old .trash and .venv-cli contents
+remain untouched. .void is the new quarantine format, not a renamed old trash.
 
-scripts/termux/setup.sh uses pkg. scripts/macos/setup.sh uses Homebrew. Both
-install development tooling and invoke scripts/install-cli.sh, then login.
-The CLI lives in a local, ignored .venv-cli and is linked into ~/.local/bin.
-The independent bootstrap remains responsible only for cloning absent leaves.
-No project-repository data flow or publishing responsibility changes.
+Go install builds the executable for the current device. Authentication stays
+external with gh auth login / gh auth setup-git. The index defaults future
+clones to HTTPS for new devices; existing SSH remotes are preserved.
+
+From the root, workit sync workdir add --dry-run previews missing namespaces
+and repositories; workit sync workdir add materializes them. Directory scope
+replaces the old all/owner/name query: use cd or workit -C <path>. Repository
+status compares each current branch with its configured cached upstream,
+rather than always comparing main. Workit does not automatically edit this
+human routing table: review/update it after index changes.
+
+scripts/termux/setup.sh uses pkg to install Git, GitHub CLI, OpenSSH and Go.
+scripts/macos/setup.sh provides equivalent Homebrew prerequisites. They do not
+install Python, create a virtual environment, log in or clone repositories.
+scripts/install-cli.sh is a thin go install convenience wrapper;
+scripts/bootstrap.sh delegates to workit sync workdir add, with no parallel
+manifest parser or cloning implementation. Manual commands in README are the
+primary onboarding flow; these Bash wrappers are optional.
+
+No source-site publishing responsibility or cross-domain data flow changes.

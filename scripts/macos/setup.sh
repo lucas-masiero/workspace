@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Seed macOS with Homebrew tooling and the same Workspace CLI used on Termux.
+# Seed macOS prerequisites; Workit installation and repository cloning are explicit.
 set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 WORKSPACE_DIR="$(cd -- "$SCRIPT_DIR/../.." && pwd -P)"
@@ -30,7 +30,7 @@ if [[ -z "$BREW" ]]; then
   exit 1
 fi
 eval "$("$BREW" shellenv)"
-"$BREW" install git gh python node
+"$BREW" install git gh go
 
 # Persist Homebrew for the next shell on a freshly seeded Mac.
 brew_line="eval \"\$($BREW shellenv)\" # Cohesian Workspace Homebrew"
@@ -42,7 +42,11 @@ if [[ ! -f "$brew_profile" ]] || ! grep -Fqx -- "$brew_line" "$brew_profile"; th
   printf '\n%s\n' "$brew_line" >> "$brew_profile"
 fi
 
-WORKSPACE_PYTHON="$("$BREW" --prefix)/bin/python3" bash "$WORKSPACE_DIR/scripts/install-cli.sh"
-"$WORKSPACE_DIR/.venv-cli/bin/workspace" repo login
-printf '\nmacOS is ready. To clone missing registered repos:\n'
-printf 'bash "%s/scripts/bootstrap.sh"\n' "$WORKSPACE_DIR"
+printf '\nPrerequisites ready. Next:\n'
+printf '%s\n' \
+  'go install github.com/cohesian-tools/workit@v0.1.0' \
+  'export PATH="$(go env GOPATH)/bin:$PATH"' \
+  'gh auth login --git-protocol https' \
+  'gh auth setup-git' \
+  'workit sync workdir add --dry-run' \
+  'workit sync workdir add'
