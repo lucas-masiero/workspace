@@ -82,7 +82,7 @@ projects/
   bookly-up/{auth,booking,payment}
 ```
 
-The 28 workstation (`w`) nodes are independent Git checkouts. Namespace (`n`)
+The 29 workstation (`w`) nodes are independent Git checkouts. Namespace (`n`)
 parents are explicit; the root (`r`) is this index, even though it is itself
 versioned with Git. Source families are ignored here, not nested repositories
 in this history. `scripts/` and `tests/` are excluded management directories.

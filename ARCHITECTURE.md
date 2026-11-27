@@ -18,6 +18,7 @@ are retained when their implementations have been reused in a newer tool.
 |---|---|
 | `organization/cohesian-essays/essays/bookly-up` | `cohesian-essays/bookly-up` |
 | `organization/cohesian-essays/essays/composition-in-go` | `cohesian-essays/composition-in-go` |
+| `organization/cohesian-essays/essays/compositional-morphodynamics` | `cohesian-essays/compositional-morphodynamics` |
 | `organization/cohesian-essays/essays/dimensional-invariance` | `cohesian-essays/dimensional-invariance` |
 | `organization/cohesian-essays/essays/intro-to-golang` | `cohesian-essays/intro-to-golang` |
 | `organization/cohesian-essays/essays/research` | `cohesian/research` |

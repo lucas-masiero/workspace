@@ -127,6 +127,11 @@ kind = "w"
 repository = "cohesian-essays/composition-in-go"
 
 [[nodes]]
+path = "organization/cohesian-essays/essays/compositional-morphodynamics"
+kind = "w"
+repository = "cohesian-essays/compositional-morphodynamics"
+
+[[nodes]]
 path = "organization/cohesian-essays/essays/dimensional-invariance"
 kind = "w"
 repository = "cohesian-essays/dimensional-invariance"
